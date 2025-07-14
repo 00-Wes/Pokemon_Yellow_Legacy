@@ -453,7 +453,6 @@ DisplayDepositWithdrawMenu:
 	ld [hli], a ; wListScrollOffset
 	ld [hl], a ; wMenuWatchMovingOutOfBounds
 	ld [wPlayerMonNumber], a
-	ld [wPartyAndBillsPCSavedMenuItem], a
 .loop
 	call HandleMenuInput
 	bit BIT_B_BUTTON, a
@@ -484,6 +483,8 @@ DisplayDepositWithdrawMenu:
 	call ReloadTilesetTilePatterns
 	call RunDefaultPaletteCommand
 	call LoadGBPal
+	CheckFlag FLAG_VIEW_PC_PKMN
+	jr nz, .exit
 	jr .loop
 
 DepositPCText:  db "DEPOSIT@"
