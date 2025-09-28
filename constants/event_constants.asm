@@ -744,6 +744,11 @@
 	const EVENT_BEAT_MEWTWO
 	const EVENT_BEAT_SMITH
 
+; arbitrary flags
+	const_next $8D0
+DEF FLAG_SKIP_STAT_ANIMATION EQU const_value
+	const FLAG_VIEW_PC_PKMN
+
 ; Indigo Plateau events
 	const_next $8E0
 DEF INDIGO_PLATEAU_EVENTS_START EQU const_value

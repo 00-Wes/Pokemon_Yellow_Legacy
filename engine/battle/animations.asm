@@ -1413,9 +1413,7 @@ AdjustOAMBlockYPos2:
 	add b
 	cp 112
 	jr c, .skipSettingPreviousEntrysAttribute
-	dec hl
-	ld a, 160 ; bug, sets previous OAM entry's attribute
-	ld [hli], a
+	ld a, 160
 .skipSettingPreviousEntrysAttribute
 	ld [hl], a
 	add hl, de
@@ -1967,6 +1965,8 @@ AnimationWavyScreen:
 	ld c, $ff
 	ld hl, WavyScreenLineOffsets
 .loop
+	ld a, [hl]
+	ldh [hSCX], a
 	push hl
 .innerLoop
 	call WavyScreen_SetSCX
@@ -1983,6 +1983,7 @@ AnimationWavyScreen:
 	dec c
 	jr nz, .loop
 	xor a
+	ldh [hSCX], a
 	ldh [hWY], a
 	call SaveScreenTilesToBuffer2
 	call ClearScreen

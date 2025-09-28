@@ -111,6 +111,7 @@ BillsPC_::
 BillsPCMenu:
 	ld a, [wParentMenuItem]
 	ld [wCurrentMenuItem], a
+	ResetEvent FLAG_VIEW_PC_PKMN
 	ld hl, vChars2 tile $78
 	ld de, PokeballTileGraphics
 	lb bc, BANK(PokeballTileGraphics), 1
@@ -168,6 +169,7 @@ BillsPCMenu:
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
 	call HandleMenuInput
+	SetEvent FLAG_VIEW_PC_PKMN
 	bit BIT_B_BUTTON, a
 	jp nz, ExitBillsPC
 	call PlaceUnfilledArrowMenuCursor
@@ -453,6 +455,7 @@ DisplayDepositWithdrawMenu:
 	ld [hli], a ; wListScrollOffset
 	ld [hl], a ; wMenuWatchMovingOutOfBounds
 	ld [wPlayerMonNumber], a
+	ld [wPartyAndBillsPCSavedMenuItem], a
 .loop
 	call HandleMenuInput
 	bit BIT_B_BUTTON, a
@@ -483,7 +486,7 @@ DisplayDepositWithdrawMenu:
 	call ReloadTilesetTilePatterns
 	call RunDefaultPaletteCommand
 	call LoadGBPal
-	CheckFlag FLAG_VIEW_PC_PKMN
+	CheckEvent FLAG_VIEW_PC_PKMN
 	jr nz, .exit
 	jr .loop
 

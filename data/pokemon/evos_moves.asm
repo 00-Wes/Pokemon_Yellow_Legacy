@@ -494,8 +494,8 @@ MewEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
+	db 7, CONFUSION
 	db 10, TRANSFORM
-	db 15, CONFUSION
 	db 20, MEGA_PUNCH
 	db 25, PSYBEAM
 	db 30, METRONOME
@@ -756,14 +756,15 @@ ChanseyEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 12, DOUBLESLAP
-	db 24, SING
-	db 30, GROWL
-	db 38, MINIMIZE
-	db 44, DEFENSE_CURL
-	db 48, LIGHT_SCREEN
-	db 50, MEGA_PUNCH
-	db 54, DOUBLE_EDGE
+	db 9, DOUBLESLAP
+	db 13, GROWL
+	db 22, SING
+	db 28, MINIMIZE
+	db 34, DEFENSE_CURL
+	db 38, SOFTBOILED
+	db 44, LIGHT_SCREEN
+	db 48, MEGA_PUNCH
+	db 50, EGG_BOMB
 	db 0
 
 MachokeEvosMoves:

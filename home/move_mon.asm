@@ -102,10 +102,10 @@ CalcStat::
 	jr z, .getAttackIV
 	cp $3
 	jr z, .getDefenseIV
-	cp $4
-	jr z, .getSpeedIV
 	cp $5
 	jr z, .getSpecialIV
+	cp $4
+	jr z, .getSpeedIV
 .getHpIV
 	push bc
 	ld a, [hl]  ; Atk IV
@@ -141,15 +141,15 @@ CalcStat::
 	ld a, [hl]
 	and $f
 	jr .calcStatFromIV
+.getSpecialIV
+	inc hl
+	ld a, [hl]
+	and $f
+	jr .calcStatFromIV
 .getSpeedIV
 	inc hl
 	ld a, [hl]
 	swap a
-	and $f
-	jr .calcStatFromIV
-.getSpecialIV
-	inc hl
-	ld a, [hl]
 	and $f
 .calcStatFromIV
 	ld d, $0
