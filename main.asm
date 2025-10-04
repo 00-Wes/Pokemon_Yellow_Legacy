@@ -291,12 +291,6 @@ INCLUDE "engine/menus/save.asm"
 INCLUDE "engine/items/tm_prices.asm"
 
 
-SECTION "Engine Spillover", ROMX
-
-INCLUDE "engine/menus/item_descriptions.asm"
-INCLUDE "engine/gfx/animated_tiles_code.asm"
-
-
 SECTION "Itemfinder 1", ROMX
 
 INCLUDE "engine/items/itemfinder.asm"
@@ -436,3 +430,9 @@ INCLUDE "engine/pikachu/pikachu_emotions.asm"
 INCLUDE "engine/pikachu/pikachu_movement.asm"
 INCLUDE "engine/pikachu/pikachu_pic_animation.asm"
 INCLUDE "engine/debug/debug_menu.asm"
+
+SECTION "Engine Spillover", ROMX
+
+INCLUDE "engine/menus/item_descriptions.asm"
+INCLUDE "engine/menus/change_box_menu.asm"
+INCLUDE "engine/gfx/animated_tiles_code.asm"

@@ -111,8 +111,7 @@ BillsPC_::
 BillsPCMenu:
 	ld a, [wParentMenuItem]
 	ld [wCurrentMenuItem], a
-	ResetEvent FLAG_VIEW_PC_PKMN
-	ld hl, vChars2 tile $78
+	callfar LoadBillsPCExtraTiles
 	ld de, PokeballTileGraphics
 	lb bc, BANK(PokeballTileGraphics), 1
 	call CopyVideoData
@@ -169,7 +168,6 @@ BillsPCMenu:
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
 	call HandleMenuInput
-	SetEvent FLAG_VIEW_PC_PKMN
 	bit BIT_B_BUTTON, a
 	jp nz, ExitBillsPC
 	call PlaceUnfilledArrowMenuCursor
@@ -235,8 +233,9 @@ BillsPCDeposit:
 	call PrintText
 	jp BillsPCMenu
 .asm_215ad
+	call BillsPCBackupListIndex
 	call DisplayDepositWithdrawMenu
-	jp nc, BillsPCMenu
+	jp nc, .doneDepositDialogBox
 	callfar IsThisPartymonStarterPikachu_Party
 	jr nc, .asm_215c9
 	ld e, $1b
@@ -271,7 +270,20 @@ BillsPCDeposit:
 	ld [hl], "@"
 	ld hl, MonWasStoredText
 	call PrintText
-	jp BillsPCMenu
+;	jp BillsPCMenu
+.doneDepositDialogBox
+	call BillsPCRestoreListIndex
+	ld a, [wBoxCount]
+	cp MONS_PER_BOX
+	jp z, BillsPCMenu ; if no space left to deposit, exit the menu automatically
+	ld a, [wPartyCount]
+	dec a
+	jp z, BillsPCMenu ; if 1 pokemon left in party, exit the menu automatically
+	ld hl, WhatText
+	call PrintText
+	; in case we displayed the status menu, need to reload these
+	call RedrawCurrentBoxPrompt
+	jp BillsPCDeposit
 
 SleepingPikachuText2:
 	text_far _SleepingPikachuText2
@@ -296,7 +308,7 @@ BillsPCWithdraw:
 	call DisplayMonListMenu
 	jp c, BillsPCMenu
 	call DisplayDepositWithdrawMenu
-	jp nc, BillsPCMenu
+	jr nc, .doneWithdrawDialogBox
 	ld a, [wWhichPokemon]
 	ld hl, wBoxMonNicks
 	call GetPartyMonName
@@ -318,7 +330,23 @@ BillsPCWithdraw:
 	call WaitForSoundToFinish
 	ld hl, MonIsTakenOutText
 	call PrintText
-	jp BillsPCMenu
+;	jp BillsPCMenu
+.doneWithdrawDialogBox
+	call BillsPCRestoreListIndex
+	ld a, [wBoxCount]
+	and a
+	jp z, BillsPCMenu ; if no pokemon left to withdraw, exit the menu automatically
+	ld a, [wPartyCount]
+	cp PARTY_LENGTH
+	jp z, BillsPCMenu ; if party is full (can't withdraw more), exit the menu automatically
+	ld hl, WhatText
+	call .redrawTextBoxAndCurrentBox
+	jp BillsPCWithdraw ; otherwise go back to the menu
+.redrawTextBoxAndCurrentBox
+	push hl
+	pop hl
+	call PrintText
+	jp RedrawCurrentBoxPrompt
 
 BillsPCRelease:
 	ld a, [wBoxCount]
@@ -331,6 +359,7 @@ BillsPCRelease:
 	ld hl, wBoxCount
 	call DisplayMonListMenu
 	jp c, BillsPCMenu
+	call BillsPCBackupListIndex
 	callfar IsThisPartymonStarterPikachu_Box
 	jr c, .asm_216cb
 	ld hl, OnceReleasedText
@@ -338,7 +367,7 @@ BillsPCRelease:
 	call YesNoChoice
 	ld a, [wCurrentMenuItem]
 	and a
-	jr nz, .loop
+	jr nz, .doneReleaseDialogBox
 	inc a
 	ld [wRemoveMonFromBox], a
 	call RemovePokemon
@@ -347,7 +376,14 @@ BillsPCRelease:
 	call PlayCry
 	ld hl, MonWasReleasedText
 	call PrintText
-	jp BillsPCMenu
+;	jp BillsPCMenu
+.doneReleaseDialogBox
+	call BillsPCRestoreListIndex
+	ld a, [wBoxCount]
+	and a
+	jp z, BillsPCMenu ; if no pokemon left to release, exit the menu automatically
+	jp .loop ; otherwise go back to the menu
+
 
 .asm_216cb
 	ld a, [wWhichPokemon]
@@ -455,7 +491,7 @@ DisplayDepositWithdrawMenu:
 	ld [hli], a ; wListScrollOffset
 	ld [hl], a ; wMenuWatchMovingOutOfBounds
 	ld [wPlayerMonNumber], a
-	ld [wPartyAndBillsPCSavedMenuItem], a
+;	ld [wPartyAndBillsPCSavedMenuItem], a
 .loop
 	call HandleMenuInput
 	bit BIT_B_BUTTON, a
@@ -486,8 +522,6 @@ DisplayDepositWithdrawMenu:
 	call ReloadTilesetTilePatterns
 	call RunDefaultPaletteCommand
 	call LoadGBPal
-	CheckEvent FLAG_VIEW_PC_PKMN
-	jr nz, .exit
 	jr .loop
 
 DepositPCText:  db "DEPOSIT@"
@@ -594,3 +628,20 @@ JustAMomentText::
 
 OpenBillsPCText::
 	script_bills_pc
+
+BillsPCBackupListIndex:
+	ld a, [wListScrollOffset]
+	ld [wSavedListScrollOffset], a
+	ret
+
+BillsPCRestoreListIndex:
+	ld a, [wSavedListScrollOffset]
+	ld [wListScrollOffset], a
+	ld a, [wPartyAndBillsPCSavedMenuItem]
+	ld [wCurrentMenuItem], a
+	ret
+
+RedrawCurrentBoxPrompt:
+	callfar LoadBillsPCExtraTiles ; in the case of displaying pokemon status menu, this needs to be reloaded
+	decoord 13, 13
+	jpfar DrawCurrentBoxPrompt ; redraw current box prompt since it probably changed

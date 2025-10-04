@@ -480,6 +480,65 @@ ChooseABoxText:
 	text_far _ChooseABoxText
 	text_end
 
+; draws a box that says info about the current box (used in pc and change box menus)
+; input = de, top left coord of the prompt box
+DrawCurrentBoxPrompt::
+	ld h, d
+	ld l, e
+	push hl
+	lb bc, 3, 5
+	call TextBoxBorder
+	pop hl
+	inc_hl_ycoord
+	inc hl
+	ld de, BoxText
+	call PlaceString
+	inc_hl_ycoord
+	push hl
+	ld a, $76 ; "No" tile
+	ld [hli], a
+	ld a, "."
+	ld [hli], a
+	ld a, [wCurrentBoxNum]
+	and $7f
+	cp 9
+	jr c, .singleDigitBoxNum
+	sub 9
+	ld [hl], "1"
+	inc hl
+	add NUMBER_CHAR_OFFSET
+	jr .next
+.singleDigitBoxNum
+	add NUMBER_CHAR_OFFSET + 1 ; wCurrentBoxNum starts at 0 so we need to increment it by 1
+.next
+	ld [hli], a
+	pop hl
+	push hl
+	lb de, 0, 4
+	add hl, de
+	ld a, [wBoxCount]
+	push af
+	and a
+	jr z, .noBallTile
+	cp 20
+	ld a, $78 ; normal pokeball tile
+	jr nz, .loadBallTile
+	ld a, $77 ; x over pokeball tile
+.loadBallTile
+	ld [hl], a
+.noBallTile
+	pop af
+	pop hl
+	inc_hl_ycoord
+	ld de, wSum
+	ld [de], a
+	lb bc, 1, 2
+	call PrintNumber
+	ld de, BoxOutOf20
+	jp PlaceString
+
+BoxText:
+	db "BOX@"
 BoxNames:
 	db   "BOX 1"
 	next "BOX 2"
@@ -496,6 +555,9 @@ BoxNames:
 
 BoxNoText:
 	db "BOX No.@"
+
+BoxOutOf20:
+	db "/20@"
 
 EmptyAllSRAMBoxes:
 ; marks all boxes in SRAM as empty (initialisation for the first time the
