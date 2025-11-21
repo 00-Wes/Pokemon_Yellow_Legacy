@@ -97,8 +97,7 @@ StartMenu_Pokemon::
 	call ClearSprites
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
-	predef StatusScreen
-	predef StatusScreen2
+	predef StatusScreenOriginal
 	call ReloadMapData
 	jp StartMenu_Pokemon
 .choseOutOfBattleMove

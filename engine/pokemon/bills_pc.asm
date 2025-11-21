@@ -90,8 +90,7 @@ PKMNLeaguePCText: db "<PKMN>LEAGUE@"
 LogOffPCText:     db "LOG OFF@"
 
 BillsPC_::
-	ld hl, wd730
-	set 6, [hl]
+	set BIT_NO_TEXT_DELAY, [hl]
 	xor a
 	ld [wParentMenuItem], a
 	inc a               ; MONSTER_NAME
@@ -100,7 +99,7 @@ BillsPC_::
 	ld a, [wListScrollOffset]
 	push af
 	ld a, [wFlags_0xcd60]
-	bit 3, a ; accessing Bill's PC through another PC?
+	bit BIT_USING_GENERIC_PC, a
 	jr nz, BillsPCMenu
 ; accessing it directly
 	ld a, SFX_TURN_ON_PC
@@ -111,10 +110,8 @@ BillsPC_::
 BillsPCMenu:
 	ld a, [wParentMenuItem]
 	ld [wCurrentMenuItem], a
+	ResetEvent FLAG_VIEW_PC_PKMN
 	callfar LoadBillsPCExtraTiles
-	ld de, PokeballTileGraphics
-	lb bc, BANK(PokeballTileGraphics), 1
-	call CopyVideoData
 	call LoadScreenTilesFromBuffer2DisableBGTransfer
 	hlcoord 0, 12
 	lb bc, 4, 18
@@ -135,7 +132,7 @@ BillsPCMenu:
 	inc hl
 	ld a, 5
 	ld [hli], a ; wMaxMenuItem
-	ld a, A_BUTTON | B_BUTTON
+	ld a, A_BUTTON | B_BUTTON | SELECT
 	ld [hli], a ; wMenuWatchedKeys
 	xor a
 	ld [hli], a ; wLastMenuItem
@@ -144,30 +141,24 @@ BillsPCMenu:
 	ld [hli], a ; wListScrollOffset
 	ld [hl], a ; wMenuWatchMovingOutOfBounds
 	ld [wPlayerMonNumber], a
-	hlcoord 9, 14
-	lb bc, 2, 9
-	call TextBoxBorder
-	ld a, [wCurrentBoxNum]
-	and $7f
-	cp 9
-	jr c, .singleDigitBoxNum
-; two digit box num
-	sub 9
-	hlcoord 17, 16
-	ld [hl], "1"
-	add "0"
-	jr .next
-.singleDigitBoxNum
-	add "1"
-.next
-	ldcoord_a 18, 16
-	hlcoord 10, 16
-	ld de, BoxNoPCText
-	call PlaceString
+	decoord 13, 13
+	callfar DrawCurrentBoxPrompt
 	ld a, 1
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
+.handleMenuInput
+	ld b, SET_PAL_OVERWORLD
+	call RunPaletteCommand
 	call HandleMenuInput
+	bit BIT_SELECT, a
+	jr z, .notSelect
+	ld a, [wCurrentMenuItem]
+	and a
+	jr nz, .handleMenuInput
+	ld [wParentMenuItem], a
+	SetEvent FLAG_VIEW_PC_PKMN
+	jp BillsPCWithdraw
+.notSelect
 	bit BIT_B_BUTTON, a
 	jp nz, ExitBillsPC
 	call PlaceUnfilledArrowMenuCursor
@@ -186,7 +177,7 @@ BillsPCMenu:
 
 ExitBillsPC:
 	ld a, [wFlags_0xcd60]
-	bit 3, a ; accessing Bill's PC through another PC?
+	bit BIT_USING_GENERIC_PC, a
 	jr nz, .next
 ; accessing it directly
 	call LoadTextBoxTilePatterns
@@ -195,12 +186,11 @@ ExitBillsPC:
 	call WaitForSoundToFinish
 .next
 	ld hl, wFlags_0xcd60
-	res 5, [hl]
+	res BIT_NO_MENU_BUTTON_SOUND, [hl]
 	call LoadScreenTilesFromBuffer2
 	pop af
 	ld [wListScrollOffset], a
-	ld hl, wd730
-	res 6, [hl]
+	res BIT_NO_TEXT_DELAY, [hl]
 	ret
 
 BillsPCPrintBox:
@@ -211,6 +201,7 @@ BillsPCDeposit:
 	ld a, [wPartyCount]
 	dec a
 	jr nz, .partyLargeEnough
+	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, CantDepositLastMonText
 	call PrintText
 	jp BillsPCMenu
@@ -218,6 +209,7 @@ BillsPCDeposit:
 	ld a, [wBoxCount]
 	cp MONS_PER_BOX
 	jr nz, .boxNotFull
+	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, BoxFullText
 	call PrintText
 	jp BillsPCMenu
@@ -238,7 +230,7 @@ BillsPCDeposit:
 	jp nc, .doneDepositDialogBox
 	callfar IsThisPartymonStarterPikachu_Party
 	jr nc, .asm_215c9
-	ld e, $1b
+	ldpikacry e, PikachuCry28
 	callfar PlayPikachuSoundClip
 	jr .asm_215cf
 .asm_215c9
@@ -279,6 +271,7 @@ BillsPCDeposit:
 	ld a, [wPartyCount]
 	dec a
 	jp z, BillsPCMenu ; if 1 pokemon left in party, exit the menu automatically
+	set BIT_NO_TEXT_DELAY, [hl] ; turn off letter printing delay so we get instant text
 	ld hl, WhatText
 	call PrintText
 	; in case we displayed the status menu, need to reload these
@@ -293,20 +286,30 @@ BillsPCWithdraw:
 	ld a, [wBoxCount]
 	and a
 	jr nz, .boxNotEmpty
+	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, NoMonText
 	call PrintText
 	jp BillsPCMenu
 .boxNotEmpty
+	CheckEvent FLAG_VIEW_PC_PKMN
+	jr nz, .viewStart
 	ld a, [wPartyCount]
 	cp PARTY_LENGTH
 	jr nz, .partyNotFull
+	res BIT_NO_TEXT_DELAY, [hl] ; turn on letter printing delay so we don't get instant text
 	ld hl, CantTakeMonText
 	call PrintText
 	jp BillsPCMenu
+.viewStart
+	ld hl, ViewMode
+	call .redrawTextBoxAndCurrentBox
 .partyNotFull
 	ld hl, wBoxCount
 	call DisplayMonListMenu
 	jp c, BillsPCMenu
+	CheckEvent FLAG_VIEW_PC_PKMN
+	jr nz, .viewPkmn
+	call BillsPCBackupListIndex
 	call DisplayDepositWithdrawMenu
 	jr nc, .doneWithdrawDialogBox
 	ld a, [wWhichPokemon]
@@ -314,7 +317,7 @@ BillsPCWithdraw:
 	call GetPartyMonName
 	callfar IsThisPartymonStarterPikachu_Box
 	jr nc, .asm_21660
-	ld e, $22
+	ldpikacry e, PikachuCry35
 	callfar PlayPikachuSoundClip
 	jr .asm_21666
 .asm_21660
@@ -344,24 +347,35 @@ BillsPCWithdraw:
 	jp BillsPCWithdraw ; otherwise go back to the menu
 .redrawTextBoxAndCurrentBox
 	push hl
+	set BIT_NO_TEXT_DELAY, [hl] ; turn off letter printing delay so we get instant text
 	pop hl
 	call PrintText
 	jp RedrawCurrentBoxPrompt
+.viewPkmn
+	call DisplayDepositWithdrawMenu.viewStats
+	ld hl, ViewMode
+	call .redrawTextBoxAndCurrentBox
+	jp BillsPCWithdraw
 
 BillsPCRelease:
 	ld a, [wBoxCount]
 	and a
 	jr nz, .loop
+	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, NoMonText
 	call PrintText
 	jp BillsPCMenu
 .loop
+	set BIT_NO_TEXT_DELAY, [hl]
+	ld hl, ReleaseWhichMonText
+	call PrintText
 	ld hl, wBoxCount
 	call DisplayMonListMenu
 	jp c, BillsPCMenu
 	call BillsPCBackupListIndex
 	callfar IsThisPartymonStarterPikachu_Box
 	jr c, .asm_216cb
+	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, OnceReleasedText
 	call PrintText
 	call YesNoChoice
@@ -384,12 +398,11 @@ BillsPCRelease:
 	jp z, BillsPCMenu ; if no pokemon left to release, exit the menu automatically
 	jp .loop ; otherwise go back to the menu
 
-
 .asm_216cb
 	ld a, [wWhichPokemon]
 	ld hl, wBoxMonNicks
 	call GetPartyMonName
-	ld e, $27
+	ldpikacry e, PikachuCry40
 	callfar PlayPikachuSoundClip
 	ld hl, PikachuUnhappyText
 	call PrintText
@@ -428,35 +441,35 @@ BillsPCMenuText:
 BoxNoPCText:
 	db "BOX No.@"
 
-KnowsHMMove::
+;KnowsHMMove::
 ; returns whether mon with party index [wWhichPokemon] knows an HM move
-	ld hl, wPartyMon1Moves
-	ld bc, wPartyMon2 - wPartyMon1
-	jr .next
+;	ld hl, wPartyMon1Moves
+;	ld bc, wPartyMon2 - wPartyMon1
+;	jr .next
 ; unreachable
-	ld hl, wBoxMon1Moves
-	ld bc, wBoxMon2 - wBoxMon1
-.next
-	ld a, [wWhichPokemon]
-	call AddNTimes
-	ld b, NUM_MOVES
-.loop
-	ld a, [hli]
-	push hl
-	push bc
-	ld hl, HMMoveArray
-	ld de, 1
-	call IsInArray
-	pop bc
-	pop hl
-	ret c
-	dec b
-	jr nz, .loop
-	and a
-	ret
+;	ld hl, wBoxMon1Moves
+;	ld bc, wBoxMon2 - wBoxMon1
+;.next
+;	ld a, [wWhichPokemon]
+;	call AddNTimes
+;	ld b, NUM_MOVES
+;.loop
+;	ld a, [hli]
+;	push hl
+;	push bc
+;	ld hl, HMMoveArray
+;	ld de, 1
+;	call IsInArray
+;	pop bc
+;	pop hl
+;	ret c
+;	dec b
+;	jr nz, .loop
+;	and a
+;	ret
 
-HMMoveArray:
-INCLUDE "data/moves/hm_moves.asm"
+;HMMoveArray:
+;INCLUDE "data/moves/hm_moves.asm"
 
 DisplayDepositWithdrawMenu:
 	hlcoord 9, 10
@@ -516,12 +529,13 @@ DisplayDepositWithdrawMenu:
 	ld a, BOX_DATA
 .next2
 	ld [wMonDataLocation], a
-	predef StatusScreen
-	predef StatusScreen2
+	predef StatusScreenOriginal
 	call LoadScreenTilesFromBuffer1
 	call ReloadTilesetTilePatterns
 	call RunDefaultPaletteCommand
 	call LoadGBPal
+	CheckEvent FLAG_VIEW_PC_PKMN
+	jr nz, .exit
 	jr .loop
 
 DepositPCText:  db "DEPOSIT@"
@@ -536,6 +550,10 @@ SwitchOnText:
 
 WhatText:
 	text_far _WhatText
+	text_end
+
+ViewMode:
+	text_far _ViewModeText
 	text_end
 
 DepositWhichMonText:

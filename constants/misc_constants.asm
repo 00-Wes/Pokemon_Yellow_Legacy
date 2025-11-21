@@ -8,14 +8,21 @@ DEF TRUE  EQU 1
 	const FLAG_SET   ; 1
 	const FLAG_TEST  ; 2
 
-; wOptions
-DEF TEXT_DELAY_FAST   EQU %001 ; 1
-DEF TEXT_DELAY_MEDIUM EQU %011 ; 3
-DEF TEXT_DELAY_SLOW   EQU %101 ; 5
+;;;;;;;;;; PureRGBnote: constants for indicating which type of safari game the player is currently playing
+DEF SAFARI_TYPE_CLASSIC EQU 0
+DEF SAFARI_TYPE_FREE_ROAM EQU 1
+;;;;;;;;;;
 
-	const_def 6
-	const BIT_BATTLE_SHIFT     ; 6
-	const BIT_BATTLE_ANIMATION ; 7
+	const_def
+	const WALKING ; 0
+	const BIKING  ; 1
+	const SURFING ; 2
+;;;;;;;;;;
 
-; wd732 flags
-DEF BIT_DEBUG_MODE EQU 1
+;;;;;;;;;; PureRGBnote: ADDED: pokedex flags
+
+	const_def
+	const BIT_POKEDEX_DATA_DISPLAY_TYPE    ; 0
+	const BIT_POKEDEX_WHICH_SPRITE_SHOWING ; 1 
+	const BIT_VIEWING_POKEDEX              ; 2
+;;;;;;;;;;

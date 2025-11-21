@@ -2545,8 +2545,7 @@ PartyMenuOrRockOrRun:
 	ld hl, wPartyMon1
 	call ClearSprites
 ; display the two status screens
-	predef StatusScreen
-	predef StatusScreen2
+	predef StatusScreenOriginal
 ; now we need to reload the enemy mon pic
 	ld a, 1
 	ldh [hWhoseTurn], a
@@ -3457,7 +3456,11 @@ MirrorMoveCheck:
 	ld hl, ResidualEffects2
 	ld de, 1
 	call IsInArray
-	jp c, JumpMoveEffect ; done here after executing effects of ResidualEffects2
+	jr nc, .notResidual2Effect
+	ld a, [wPlayerMovePower]
+	and a ; check if zero base power
+	jp z, JumpMoveEffect
+.notResidual2Effect
 	ld a, [wMoveMissed]
 	and a
 	jr z, .moveDidNotMiss
@@ -4182,15 +4185,15 @@ CheckForDisobedience:
 	ld a, 101
 	jr nz, .next
 	bit BIT_MARSHBADGE, [hl]
-	ld a, 70
+	ld a, 101
 	jr nz, .next
 	bit BIT_RAINBOWBADGE, [hl]
-	ld a, 50
+	ld a, 101
 	jr nz, .next
 	bit BIT_CASCADEBADGE, [hl]
-	ld a, 30
+	ld a, 101
 	jr nz, .next
-	ld a, 10
+	ld a, 101
 .next
 	ld b, a
 	ld c, a
@@ -5986,7 +5989,11 @@ EnemyCheckIfMirrorMoveEffect:
 	ld hl, ResidualEffects2
 	ld de, $1
 	call IsInArray
-	jp c, JumpMoveEffect
+	jr nc, .notResidual2EffectEnemy
+	ld a, [wEnemyMovePower]
+	and a ; Check if zero base power
+	jp z, JumpMoveEffect
+.notResidual2EffectEnemy
 	ld a, [wMoveMissed]
 	and a
 	jr z, .moveDidNotMiss

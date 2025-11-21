@@ -37,9 +37,6 @@ DEF MOVE_ACC    rb
 DEF MOVE_PP     rb
 DEF MOVE_LENGTH EQU _RS
 
-; D733 flags
-DEF BIT_TEST_BATTLE EQU 0
-
 ; battle type constants (wBattleType values)
 	const_def
 	const BATTLE_TYPE_NORMAL  ; 0

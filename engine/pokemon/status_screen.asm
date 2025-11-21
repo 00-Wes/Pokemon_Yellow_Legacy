@@ -617,3 +617,23 @@ DVParse:
 	pop bc
 	pop hl
 	ret
+
+;;;;;;;;;; PureRGBnote: ADDED: code that allows immediately backing out of the status menu with B from all status menus
+
+StatusScreenOriginal:
+	ldh a, [hTileAnimations]
+	push af
+	call StatusScreen
+	ld b, A_BUTTON | B_BUTTON
+	bit BIT_B_BUTTON, a
+	jr nz, ExitStatusScreen
+	call StatusScreen2
+	ld b, A_BUTTON | B_BUTTON
+ExitStatusScreen:
+	pop af
+	ldh [hTileAnimations], a
+	res 1, [hl]
+	ld a, $77
+	ldh [rNR50], a
+	call GBPalWhiteOut
+	jp ClearScreen
