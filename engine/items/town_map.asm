@@ -150,8 +150,18 @@ LoadTownMap_Fly::
 	ldh [hJoy7], a
 	call LoadPlayerSpriteGraphics
 	call LoadFontTilePatterns
+; new, to load the Flying Pikachu sprite
+	ld a, [wcf91]
+	cp STARTER_PIKACHU
+	jr nz, .vanillaBirdSprite
+	ld de, FlyingPikachuSprite
+	ld b, BANK(FlyingPikachuSprite)
+	jr .continueLoadingSprite
+.vanillaBirdSprite
 	ld de, BirdSprite
 	ld b, BANK(BirdSprite)
+.continueLoadingSprite
+; back to vanilla
 	ld c, 12
 	ld hl, vSprites tile $04
 	call CopyVideoData

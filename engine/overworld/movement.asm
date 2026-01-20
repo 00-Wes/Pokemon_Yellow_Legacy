@@ -604,8 +604,24 @@ CanWalkOntoTile:
 	and a
 	ret
 .notScripted
+;;;;;;;;;; PureRGBnote: ADDED: in fuchsia city, the lapras can move around on the water in its area
+	ld a, [wCurMap]
+	cp FUCHSIA_CITY
+	jr nz, .noLaprasCheck
+	ld a, c
+	cp $14 ; water tile
+	jr nz, .noLaprasCheck
+	ld h, HIGH(wSpriteStateData1)
+	ldh a, [hCurrentSpriteOffset]
+	ld l, a
+	ld a, [hl]
+	cp SPRITE_LAPRAS ; lapras in fuchsia city
+	jr z, .skipTileCheck
+.noLaprasCheck
+;;;;;;;;;;
 	call _IsTilePassable
 	jr c, .impassable
+.skipTileCheck
 	ld h, HIGH(wSpriteStateData2)
 	ldh a, [hCurrentSpriteOffset]
 	add $6

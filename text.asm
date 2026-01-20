@@ -234,7 +234,6 @@ INCLUDE "text/MrPsychicsHouse.asm"
 
 INCLUDE "data/text/text_7.asm"
 
-
 SECTION "Text 8", ROMX
 
 INCLUDE "text/PalletTown.asm"
@@ -251,6 +250,7 @@ INCLUDE "text/ViridianSchoolHouse.asm"
 INCLUDE "text/CeruleanGym.asm"
 
 INCLUDE "data/text/text_8.asm"
+INCLUDE "engine/battle/just_slot_machine_stuff.asm" ; to free bank1E
 
 
 SECTION "Text 9", ROMX

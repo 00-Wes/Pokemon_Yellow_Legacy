@@ -21,11 +21,11 @@ Moves:
 	move ICE_PUNCH,    FREEZE_SIDE_EFFECT,          70, ICE,          100, 15
 	move THUNDERPUNCH, PARALYZE_SIDE_EFFECT1,       70, ELECTRIC,     100, 15
 	move SCRATCH,      NO_ADDITIONAL_EFFECT,        40, NORMAL,       100, 35
-	move VICEGRIP,     NO_ADDITIONAL_EFFECT,        55, NORMAL,       100, 30
+	move VICEGRIP,     NO_ADDITIONAL_EFFECT,        80, BUG,          100, 20
 	move GUILLOTINE,   OHKO_EFFECT,                  1, NORMAL,        30,  5
-	move RAZOR_WIND,   NO_ADDITIONAL_EFFECT,        50, FLYING,       100, 10
+	move RAZOR_WIND,   NO_ADDITIONAL_EFFECT,        45, FLYING,        95, 10
 	move SWORDS_DANCE, ATTACK_UP2_EFFECT,            0, BIRD,         100, 30
-	move CUT,          NO_ADDITIONAL_EFFECT,        50, BUG,          100, 30
+	move CUT,          NO_ADDITIONAL_EFFECT,        45, BUG,          100, 30
 	move GUST,         NO_ADDITIONAL_EFFECT,        40, FLYING,       100, 35
 	move WING_ATTACK,  NO_ADDITIONAL_EFFECT,        60, FLYING,       100, 35
 	move WHIRLWIND,    SWITCH_AND_TELEPORT_EFFECT,   0, BIRD,          85, 20
@@ -132,7 +132,7 @@ Moves:
 	move MIRROR_MOVE,  MIRROR_MOVE_EFFECT,           0, FLYING,       100, 20
 	move SELFDESTRUCT, EXPLODE_EFFECT,             200, NORMAL,       100,  5
 	move EGG_BOMB,     NO_ADDITIONAL_EFFECT,       100, NORMAL,       100, 15
-	move LICK,         PARALYZE_SIDE_EFFECT2,       40, NORMAL,       100, 30
+	move LICK,         PARALYZE_EFFECT,             20, NORMAL,       100, 20
 	move SMOG,         POISON_SIDE_EFFECT2,         40, POISON,        80, 20
 	move SLUDGE,       POISON_SIDE_EFFECT2,         90, POISON,       100, 20
 	move BONE_CLUB,    FLINCH_SIDE_EFFECT1,         65, GROUND,       100, 20
@@ -147,7 +147,7 @@ Moves:
 	move KINESIS,      ACCURACY_DOWN1_EFFECT,        0, BIRD,          80, 15
 	move SOFTBOILED,   HEAL_EFFECT,                  0, BIRD,         100,  5
 	move HI_JUMP_KICK, JUMP_KICK_EFFECT,           120, FIGHTING,      90, 20
-	move GLARE,        PARALYZE_EFFECT,              0, BIRD,          90, 30
+	move GLARE,        PARALYZE_SIDE_EFFECT2,       30, GHOST,        100, 25
 	move DREAM_EATER,  DREAM_EATER_EFFECT,         100, PSYCHIC_TYPE, 100, 15
 	move POISON_GAS,   POISON_EFFECT,                0, POISON,        85, 40
 	move BARRAGE,      TWO_TO_FIVE_ATTACKS_EFFECT,  20, GRASS,        100, 20

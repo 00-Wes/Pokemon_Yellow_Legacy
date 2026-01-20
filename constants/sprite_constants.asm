@@ -106,6 +106,7 @@
 	const SPRITE_SLOWPOKE
 	const SPRITE_DODUO
 	const SPRITE_VAPOREON
+	const SPRITE_FLYING_PIKACHU          ; new
 DEF FIRST_STILL_SPRITE EQU const_value
 	const SPRITE_POKE_BALL               ; $47
 	const SPRITE_FOSSIL                  ; $48

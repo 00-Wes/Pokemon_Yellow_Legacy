@@ -109,8 +109,6 @@ SurgeSprite::            INCBIN "gfx/sprites/surge.2bpp"
 ErikaSprite::            INCBIN "gfx/sprites/erika.2bpp"
 SabrinaSprite::          INCBIN "gfx/sprites/sabrina.2bpp"
 BlaineSprite::           INCBIN "gfx/sprites/blaine.2bpp"
-KabutoSprite::           INCBIN "gfx/sprites/kabuto.2bpp"
-JolteonSprite::          INCBIN "gfx/sprites/jolteon.2bpp"
 
 
 SECTION "NPC Sprites 5", ROMX
@@ -138,6 +136,13 @@ Seel2Sprite::            INCBIN "gfx/sprites/seel2.2bpp"
 SlowpokeSprite::         INCBIN "gfx/sprites/slowpoke.2bpp"
 KangaskhanSprite::       INCBIN "gfx/sprites/kangaskhan.2bpp"
 WigglytuffSprite::       INCBIN "gfx/sprites/wigglytuff.2bpp"
+
+
+SECTION "NPC Sprites 7", ROMX
+
+KabutoSprite::           INCBIN "gfx/sprites/kabuto.2bpp"
+JolteonSprite::          INCBIN "gfx/sprites/jolteon.2bpp"
+FlyingPikachuSprite::    INCBIN "gfx/sprites/flyingpikachu.2bpp"
 
 
 SECTION "Mon Icons 1", ROMX

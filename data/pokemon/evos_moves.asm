@@ -400,9 +400,12 @@ GengarEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 10, SMOG
-	db 15, PSYWAVE
+	db 10, GLARE
+	db 15, POISON_GAS
+        db 24, PSYWAVE
+	db 29, SMOG
 	db 36, NIGHT_SHADE
+        db 44, SLUDGE
 	db 55, HYPNOSIS
 	db 55, DREAM_EATER
 	db 0
@@ -507,9 +510,9 @@ GyaradosEvosMoves:
 	db 0
 ; Learnset
 	db 20, BITE
-	db 22, GUST
-	db 25, WATERFALL
-	db 28, DRAGON_RAGE
+	db 22, WATER_GUN
+	db 25, DRAGON_RAGE
+	db 28, WATERFALL
 	db 32, LEER
 	db 35, THRASH
 	db 41, HYDRO_PUMP
@@ -555,10 +558,12 @@ GastlyEvosMoves:
 	db EVOLVE_LEVEL, 25, HAUNTER
 	db 0
 ; Learnset
-	db 10, SMOG
-	db 15, PSYWAVE
-	db 23, POISON_GAS
+	db 10, GLARE
+	db 15, POISON_GAS
+        db 24, PSYWAVE
+	db 29, SMOG
 	db 36, NIGHT_SHADE
+        db 44, SLUDGE
 	db 55, HYPNOSIS
 	db 55, DREAM_EATER
 	db 0
@@ -567,12 +572,12 @@ ScytherEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 6, FOCUS_ENERGY
-	db 16, CUT
+	db 8, FOCUS_ENERGY
+	db 16, WING_ATTACK
 	db 24, AGILITY
-	db 30, WING_ATTACK
-	db 36, SLASH
-	db 42, TWINEEDLE
+	db 30, CUT
+	db 36, RAZOR_WIND
+	db 42, SLASH
 	db 48, DOUBLE_TEAM
 	db 54, SWORDS_DANCE
 	db 0
@@ -616,8 +621,9 @@ PinsirEvosMoves:
 ; Learnset
 	db 5, HARDEN
 	db 8, FOCUS_ENERGY
+        db 12, RAGE
 	db 25, SEISMIC_TOSS
-	db 30, TWINEEDLE
+	db 30, VICEGRIP
 	db 36, SUBMISSION
 	db 42, SLASH
 	db 45, GUILLOTINE
@@ -826,7 +832,7 @@ ArbokEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 9,  POISON_STING
+	db 9,  LICK
 	db 15, BITE
 	db 18, ACID
 	db 22, SUBSTITUTE
@@ -1067,10 +1073,12 @@ VenonatEvosMoves:
 	db 13, LEECH_LIFE
 	db 17, CONFUSION
 	db 20, POISONPOWDER
+        db 25, ACID
 	db 29, STUN_SPORE
 	db 33, PSYBEAM
 	db 36, SLEEP_POWDER
 	db 41, PSYCHIC_M
+        db 46, SLUDGE
 	db 0
 
 DragoniteEvosMoves:
@@ -1136,7 +1144,8 @@ JynxEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 18, CONFUSION
+	db 12, CONFUSION
+        db 18, GLARE
 	db 23, DOUBLESLAP
 	db 31, ICE_PUNCH
 	db 35, LOVELY_KISS
@@ -1163,7 +1172,7 @@ ArticunoEvosMoves:
 	db 0
 ; Learnset
 	db 35, AGILITY
-	db 40, DRILL_PECK
+	db 40, RAZOR_WIND
 	db 45, ICE_BEAM
 	db 51, BLIZZARD
 	db 55, SKY_ATTACK
@@ -1207,10 +1216,10 @@ KrabbyEvosMoves:
 	db EVOLVE_LEVEL, 28, KINGLER
 	db 0
 ; Learnset
-	db 20, VICEGRIP
-	db 25, BUBBLEBEAM
-	db 29, CUT
-	db 30, STOMP
+	db 22, BUBBLEBEAM
+	db 25, CUT
+	db 29, STOMP
+	db 30, VICEGRIP
 	db 35, CRABHAMMER
 	db 40, HARDEN
 	db 50, GUILLOTINE
@@ -1594,7 +1603,7 @@ EkansEvosMoves:
 	db EVOLVE_LEVEL, 22, ARBOK
 	db 0
 ; Learnset
-	db 9,  POISON_STING
+	db 9,  LICK
 	db 12, BITE
 	db 15, ACID
 	db 22, SUBSTITUTE
@@ -1930,10 +1939,10 @@ KinglerEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 20, VICEGRIP
-	db 25, BUBBLEBEAM
-	db 28, CUT
-	db 30, STOMP
+	db 22, BUBBLEBEAM
+	db 25, CUT
+	db 28, STOMP
+	db 30, VICEGRIP
 	db 35, CRABHAMMER
 	db 40, HARDEN
 	db 50, GUILLOTINE
@@ -2038,9 +2047,12 @@ HaunterEvosMoves:
 	db EVOLVE_LEVEL, 42, GENGAR
 	db 0
 ; Learnset
-	db 10, SMOG
-	db 15, PSYWAVE
+	db 10, GLARE
+	db 15, POISON_GAS
+        db 24, PSYWAVE
+	db 29, SMOG
 	db 36, NIGHT_SHADE
+        db 44, SLUDGE
 	db 55, HYPNOSIS
 	db 55, DREAM_EATER
 	db 0
