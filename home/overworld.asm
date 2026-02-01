@@ -69,10 +69,15 @@ OverworldLoopLessDelay::
 	bit 7, a ; are we simulating button presses?
 	jr z, .notSimulating
 	ldh a, [hJoyHeld]
-	jr .checkIfStartIsPressed
+	jr .checkIfSelectIsPressed
 .notSimulating
 	ldh a, [hJoyPressed]
-.checkIfStartIsPressed
+.checkIfSelectIsPressed
+	bit BIT_SELECT, a
+	jr z, .selectButtonNotPressed
+; if SELECT is pressed
+	farcall TryRideBike
+.selectButtonNotPressed
 	bit BIT_START, a
 	jr z, .startButtonNotPressed
 ; if START is pressed

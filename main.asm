@@ -436,3 +436,4 @@ SECTION "Engine Spillover", ROMX
 INCLUDE "engine/menus/item_descriptions.asm"
 INCLUDE "engine/menus/change_box_menu.asm"
 INCLUDE "engine/gfx/animated_tiles_code.asm"
+INCLUDE "engine/overworld/bike_shortcut.asm"
