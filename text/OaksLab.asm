@@ -428,7 +428,40 @@ _CompletedDexText::
 	para "Research calls!"
 	done
 
-_OaksLabScientistText::
+_OaksLabScientist1Text::
+	text "Hi, I am one of"
+	line "PROF.OAK's AIDEs."
+
+	para "We study #MON"
+	line "day and night,"
+	cont "so that we can"
+	cont "learn as much"
+	cont "as we can"
+	cont "about them."
+
+	para "We are constantly"
+	line "updating and"
+	cont "correcting what"
+	cont "we thought we"
+	cont "knew."
+
+	para "For instance,"
+	line "it was once"
+	cont "believed that"
+	cont "traded #MON"
+	cont "gained experience"
+	cont "faster and also"
+	cont "that they wouldn't"
+	cont "obey if they"
+	cont "got too strong."
+
+	para "But we recently"
+	line "proved that"
+	cont "belief to"
+	cont "not be true."
+	done
+
+_OaksLabScientist2Text::
 	text "I study #MON as"
 	line "PROF.OAK's AIDE."
 

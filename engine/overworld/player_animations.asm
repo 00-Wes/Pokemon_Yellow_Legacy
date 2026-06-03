@@ -54,8 +54,6 @@ EnterMapAnim::
 	cp STARTER_PIKACHU
 	jr nz, .vanillaFlyAnimation
 	call LoadFlyingPikachuSpriteGraphics
-	ld a, SFX_FLY
-	call PlaySound
 	ld hl, wFlyAnimUsingCoordList
 	xor a ; is using coord list
 	ld [hli], a ; wFlyAnimUsingCoordList
@@ -213,7 +211,7 @@ _LeaveMapAnim::
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $8 ; wFlyAnimBirdSpriteImageIndex (facing left)
 	call DoFlyAnimation
-	ld a, SFX_FLY
+	ld a, SFX_POKEFLUTE
 	call PlaySound
 
 	ld hl, wFlyAnimUsingCoordList

@@ -254,20 +254,18 @@ NothingToSort::
 
 ItemSortList::
 	; Used Key Items
-	db BICYCLE
-	db ITEMFINDER
-	db EXP_ALL
 	db TOWN_MAP
-	; Rods
-	db OLD_ROD
-	db GOOD_ROD
-	db SUPER_ROD
+	db ITEMFINDER
 	; Balls
 	db POKE_BALL
 	db GREAT_BALL
 	db ULTRA_BALL
-	db SAFARI_BALL
 	db MASTER_BALL
+	db SAFARI_BALL
+	; Rods
+	db OLD_ROD
+	db GOOD_ROD
+	db SUPER_ROD
 	; Common Items
 	db REPEL
 	db SUPER_REPEL
@@ -334,6 +332,7 @@ ItemSortList::
 	db SAFARI_ROCK
 	db S_S_TICKET
 	; Key Items With No Use
+	db EXP_ALL
 	db SECRET_KEY
 	db BIKE_VOUCHER
 	db CARD_KEY
@@ -399,3 +398,5 @@ ItemSortList::
 	db HM01 + 3
 	db HM01 + 4
 	db -1 ; end
+	; Wes note Moved to bottom since Bike is registered to Select
+	db BICYCLE

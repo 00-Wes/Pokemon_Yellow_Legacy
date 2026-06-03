@@ -277,8 +277,6 @@ INCLUDE "gfx/version.asm"
 
 SECTION "bank1C", ROMX
 
-INCLUDE "engine/movie/splash.asm"
-INCLUDE "engine/movie/hall_of_fame.asm"
 INCLUDE "engine/overworld/healing_machine.asm"
 INCLUDE "engine/overworld/player_animations.asm"
 INCLUDE "engine/battle/ghost_marowak_anim.asm"
@@ -436,4 +434,7 @@ SECTION "Engine Spillover", ROMX
 INCLUDE "engine/menus/item_descriptions.asm"
 INCLUDE "engine/menus/change_box_menu.asm"
 INCLUDE "engine/gfx/animated_tiles_code.asm"
-INCLUDE "engine/overworld/bike_shortcut.asm"
+INCLUDE "engine/movie/splash.asm"
+INCLUDE "engine/movie/hall_of_fame.asm"
+INCLUDE "engine/gfx/set_attack_animation_palette.asm"
+INCLUDE "engine/overworld/select_button_functionality.asm"

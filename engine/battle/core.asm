@@ -928,7 +928,13 @@ AnyEnemyPokemonAliveCheck:
 ; stores whether enemy ran in Z flag
 ReplaceFaintedEnemyMon:
 	ld hl, wEnemyHPBarColor
-	ld e, $30
+;	ld e, $00 ; was $30, get health bar palette of an HP bar E pixels long
+
+	;joenote - make the trainer pokeballs red
+	ld a, HP_BAR_GREEN
+	ld [hl], a	;reset the enemy HP bar to green because GetBattleHealthBarColor only works on differing colors
+	ld e, 0	;now prepare to load the color for a 0-pixel health bar (that being red)
+
 	call GetBattleHealthBarColor
 	ldpal a, SHADE_BLACK, SHADE_DARK, SHADE_LIGHT, SHADE_WHITE
 	ldh [rOBP0], a
@@ -2545,7 +2551,7 @@ PartyMenuOrRockOrRun:
 	ld hl, wPartyMon1
 	call ClearSprites
 ; display the two status screens
-	predef StatusScreenOriginal
+	predef StatusScreenLoop
 ; now we need to reload the enemy mon pic
 	ld a, 1
 	ldh [hWhoseTurn], a

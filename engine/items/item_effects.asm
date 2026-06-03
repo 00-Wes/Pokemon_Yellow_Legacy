@@ -505,6 +505,17 @@ ItemUseBall:
 .skip6
 	ld a, [wcf91]
 	push af
+
+	;joenote - made a catch, so adjust the BG palette for the resting pokeball
+	push de
+	ld d, CONVERT_OBP0
+	ld e, 3
+	ld a, PAL_MEWMON
+	add NUM_POKEMON_INDEXES+1
+	ld [wcf91], a
+	callfar TransferMonPal
+	pop de
+
 	ld a, [wEnemyMonSpecies2]
 	ld [wcf91], a
 	ld a, [wEnemyMonLevel]
@@ -682,15 +693,6 @@ ItemUseBicycle:
 	jp z, ItemUseNotTime
 	dec a ; is player already bicycling?
 	jr nz, .tryToGetOnBike
-.tryToGetOffBike
-	ld a, [wPseudoItemID]
-	and a ; if not using select shortcut
-	jr z, .getOffBike
-	; check cycling road
-	ld a, [wd732]
-	bit BIT_ALWAYS_ON_BIKE, a
-	jr z, .getOffBike ; if not on cycling road, get off bike
-	jr .printCannotGetOffText
 .getOffBike
 	call ItemUseReloadOverworldData
 	xor a
@@ -698,34 +700,37 @@ ItemUseBicycle:
 	ld a, $00
 	ld [wPikachuSpawnState], a
 	call PlayDefaultMusic ; play walking music
-	ld a, [wPseudoItemID]
-	and a
-	ret nz
-	ld hl, GotOffBicycleText
-	jr .printText
-
+;;;;;;;;;; PureRGBnote: CHANGED: the text telling you "got on bike" and "got off bike" each only display once per playthrough to be less annoying
+	CheckEvent EVENT_SAW_GOT_OFF_BIKE_TEXT
+	jr nz, .noTextGetOff  
+	SetEvent EVENT_SAW_GOT_OFF_BIKE_TEXT
+	ld hl, GotOffBicycleText ; this text only displays once to be less annoying
+	call PrintText
+;;;;;;;;;;
+.noTextGetOff
+	ret
 .tryToGetOnBike
 	call IsBikeRidingAllowed
 	jp nc, NoCyclingAllowedHere
 	call ItemUseReloadOverworldData
 	xor a ; no keys pressed
-	ld [hJoyHeld], a ; current joypad state
+	ldh [hJoyHeld], a ; current joypad state
 	ld a, $1
 	ld [wWalkBikeSurfState], a ; change player state to bicycling
 	call PlayDefaultMusic ; play bike riding music
-	ld a, [wPseudoItemID]
-	and a ; if using select shortcut
-	ret nz
+	xor a
+	ld [wWalkBikeSurfState], a
+;;;;;;;;;;  PureRGBnote: CHANGED: the text telling you "got on bike" and "got off bike" each only display once per playthrough to be less annoying
+	CheckEvent EVENT_SAW_GOT_ON_BIKE_TEXT
+	jr nz, .noTextGetOn 
+	SetEvent EVENT_SAW_GOT_ON_BIKE_TEXT
 	ld hl, GotOnBicycleText
-.printText
-	jp PrintText
-.printCannotGetOffText
-	ld hl, CannotGetOffBicycleText
-	jp PrintText
-
-CannotGetOffBicycleText:
-	text_far _CannotGetOffHereText
-	text_end
+	call PrintText
+.noTextGetOn
+;;;;;;;;;;
+	ld a, $1
+	ld [wWalkBikeSurfState], a
+	ret
 
 ; used for Surf out-of-battle effect
 ItemUseSurfboard:

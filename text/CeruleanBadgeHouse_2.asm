@@ -1,5 +1,5 @@
 _CeruleanBadgeHouseSoulBadgeText::
-	text "The DEFENSE of all"
+	text "The SPEED of all"
 	line "#MON increases"
 	cont "a little bit."
 
@@ -9,20 +9,19 @@ _CeruleanBadgeHouseSoulBadgeText::
 	prompt
 
 _CeruleanBadgeHouseMarshBadgeText::
-	text "#MON up to L70"
-	line "will obey you."
-
-	para "Any higher, they"
-	line "become unruly!"
+	text "Sorry this one"
+	line "doesn't do any-"
+	cont "thing special."
 	prompt
 
 _CeruleanBadgeHouseVolcanoBadgeText::
-	text "Your #MON's"
-	line "SPECIAL abilities"
-	cont "increase a bit."
+	text "The SPECIAL of all"
+	line "#MON increases"
+	cont "a little bit."
 	prompt
 
 _CeruleanBadgeHouseEarthBadgeText::
-	text "All #MON will"
-	line "obey you!"
+	text "Sorry this one"
+	line "doesn't do any-"
+	cont "thing special."
 	prompt

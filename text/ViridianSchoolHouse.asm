@@ -14,13 +14,13 @@ _ViridianSchoolHouseBrunetteGirlText::
 	done
 
 _ViridianSchoolHouseLittleGirlText::
-	text "Sis says #MON"
-	line "will evolve"
-	cont "if you train them"
-	cont "nicely."
+	text "Teacher says that"
+	line "#MON evolve"
+	cont "through different"
+	cont "methods."
 
-	para "There is no need"
-	line "to trade them!"
+	para "Umm what's"
+	line "a method?"
 	done
 
 _ViridianSchoolHouseCooltrainerFText::

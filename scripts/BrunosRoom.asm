@@ -124,7 +124,12 @@ BrunosRoomBrunoEndBattleScript:
 	ld a, TEXT_BRUNOSROOM_BRUNO
 .continue
 	ldh [hSpriteIndexOrTextID], a
-	jp DisplayTextID
+	call DisplayTextID
+;;;;;;;;;; PureRGBnote: ADDED: sound effect for the doors opening
+	ld a, SFX_GO_INSIDE
+	call PlaySound
+	ret
+;;;;;;;;;;
 .Rematch
 	ld a, TEXT_BRUNOSROOM_BRUNO_REMATCH
 	jr .continue

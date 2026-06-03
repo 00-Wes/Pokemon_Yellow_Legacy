@@ -97,7 +97,7 @@ StartMenu_Pokemon::
 	call ClearSprites
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
-	predef StatusScreenOriginal
+	predef StatusScreenLoop
 	call ReloadMapData
 	jp StartMenu_Pokemon
 .choseOutOfBattleMove
@@ -133,6 +133,19 @@ StartMenu_Pokemon::
 	jp z, .newBadgeRequired
 	call CheckIfInOutsideMap
 	jr z, .canFly
+; new block to make "open-air" maps flyable
+	ld a, [wCurMap]
+	cp CELADON_MART_ROOF
+	jr z, .canFly
+	cp CELADON_MANSION_ROOF
+	jr z, .canFly
+	cp VERMILION_DOCK
+	jr z, .canFly
+	cp SS_ANNE_BOW
+	jr z, .canFly
+	cp VIRIDIAN_FOREST
+	jr z, .canFly
+; end of new block to make "open-air" maps flyable
 	ld a, [wWhichPokemon]
 	ld hl, wPartyMonNicks
 	call GetPartyMonName

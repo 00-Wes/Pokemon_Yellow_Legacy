@@ -17,7 +17,7 @@ _MrPsychicsHouseMrPsychicTM29ExplanationText::
 
 	para "It can lower the"
 	line "target's SPECIAL"
-	cont "abilities."
+	cont "stat."
 	done
 
 _MrPsychicsHouseMrPsychicTM29NoRoomText::

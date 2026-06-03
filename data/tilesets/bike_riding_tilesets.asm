@@ -5,4 +5,5 @@ BikeRidingTilesets::
 	db SHIP_PORT
 	db CAVERN
 	db GATE
+	db FOREST_GATE
 	db -1 ; end

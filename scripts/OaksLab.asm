@@ -716,8 +716,8 @@ OaksLab_TextPointers:
 	dw_const OaksLabPokedexText,                        TEXT_OAKSLAB_POKEDEX2
 	dw_const OaksLabOak2Text,                           TEXT_OAKSLAB_OAK2
 	dw_const OaksLabGirlText,                           TEXT_OAKSLAB_GIRL
-	dw_const OaksLabScientistText,                      TEXT_OAKSLAB_SCIENTIST1
-	dw_const OaksLabScientistText,                      TEXT_OAKSLAB_SCIENTIST2
+	dw_const OaksLabScientist1Text,                     TEXT_OAKSLAB_SCIENTIST1
+	dw_const OaksLabScientist2Text,                     TEXT_OAKSLAB_SCIENTIST2
 	dw_const OaksLabOakDontGoAwayYetText,               TEXT_OAKSLAB_OAK_DONT_GO_AWAY_YET
 	dw_const OaksLabRivalIllTakeYouOnText,              TEXT_OAKSLAB_RIVAL_ILL_TAKE_YOU_ON
 	dw_const OaksLabRivalSmellYouLaterText,             TEXT_OAKSLAB_RIVAL_SMELL_YOU_LATER
@@ -745,8 +745,8 @@ OaksLab_TextPointers2:
 	dw OaksLabPokedexText
 	dw OaksLabOak2Text
 	dw OaksLabGirlText
-	dw OaksLabScientistText
-	dw OaksLabScientistText
+	dw OaksLabScientist1Text
+	dw OaksLabScientist2Text
 
 OaksLabRivalText:
 	text_asm
@@ -1171,12 +1171,22 @@ CompletedDexText:
 	text_far _CompletedDexText
 	text_end
 
-OaksLabScientistText:
+OaksLabScientist1Text:
 	text_asm
-	ld hl, .Text
+	ld hl, .Text1
 	call PrintText
 	jp TextScriptEnd
 
-.Text:
-	text_far _OaksLabScientistText
+.Text1:
+	text_far _OaksLabScientist1Text
+	text_end
+
+OaksLabScientist2Text:
+	text_asm
+	ld hl, .Text2
+	call PrintText
+	jp TextScriptEnd
+
+.Text2:
+	text_far _OaksLabScientist2Text
 	text_end

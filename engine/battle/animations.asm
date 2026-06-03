@@ -448,7 +448,7 @@ MoveAnimation:
 	xor a
 	vc_hook Stop_reducing_move_anim_flashing_Haze_Hyper_Beam
 	ld [wSubAnimSubEntryAddr], a
-	ld [wUnusedD09B], a
+	; ld [wUnusedD09B], a
 	ld [wSubAnimTransform], a
 	dec a ; NO_MOVE - 1
 	ld [wAnimSoundID], a
@@ -559,13 +559,14 @@ AnimationShakeScreenHorizontallySlow:
 	ret
 
 SetAnimationPalette:
+	ld b, $e4
 	ld a, [wOnSGB]
 	and a
-	ld a, $e4
+;	ld a, $e4
 	jr z, .notSGB
-	ld a, $f0
-	ld [wAnimPalette], a
-	ld b, $e4
+;	ld a, $f0
+;	ld [wAnimPalette], a
+;	ld b, $e4
 	ld a, [wAnimationID]
 	cp TRADE_BALL_DROP_ANIM
 	jr c, .next
@@ -573,7 +574,10 @@ SetAnimationPalette:
 	jr nc, .next
 	ld b, $f0
 .next
+.notSGB
 	ld a, b
+;	ld a, $e4
+;	ld [wAnimPalette], a
 	vc_hook Reduce_move_anim_flashing_Hyper_Beam
 	ldh [rOBP0], a
 	ld a, $6c
@@ -581,15 +585,7 @@ SetAnimationPalette:
 	ldh [rOBP1], a
 	call UpdateGBCPal_OBP0
 	call UpdateGBCPal_OBP1
-	ret
-.notSGB
-	ld a, $e4
-	ld [wAnimPalette], a
-	ldh [rOBP0], a
-	ld a, $6c
-	ldh [rOBP1], a
-	call UpdateGBCPal_OBP0
-	call UpdateGBCPal_OBP1
+	predef SetAttackAnimPal	;joenote - new function to handle animation palettes
 	ret
 
 Func_78e98:
@@ -721,11 +717,16 @@ DoBallTossSpecialEffects:
 	ld a, [wcf91]
 	cp ULTRA_BALL + 1 ; is it a Master Ball or Ultra Ball?
 	jr nc, .skipFlashingEffect
+;don't complement colors on the last frame
+	ld a, [wSubAnimCounter]
+	cp 1
+	jr z, .skipFlashingEffect
 .flashingEffect ; do a flashing effect if it's Master Ball or Ultra Ball
 	ldh a, [rOBP0]
 	xor %00111100 ; complement colors 1 and 2
 	ldh [rOBP0], a
-	call UpdateGBCPal_OBP0
+;	call UpdateGBCPal_OBP0
+	predef SetAttackAnimPal
 .skipFlashingEffect
 	ld a, [wSubAnimCounter]
 	cp 11 ; is it the beginning of the subanimation?
@@ -742,12 +743,14 @@ DoBallTossSpecialEffects:
 	ret nz
 ; if the enemy pokemon is the Ghost Marowak, make it dodge during the last 3 frames
 	ld a, [wSubAnimCounter]
-	cp 3
-	jr z, .moveGhostMarowakLeft
-	cp 2
-	jr z, .moveGhostMarowakLeft
-	cp 1
-	ret nz
+;	cp 3
+;	jr z, .moveGhostMarowakLeft
+;	cp 2
+;	jr z, .moveGhostMarowakLeft
+;	cp 1
+;	ret nz
+	cp 4
+	ret nc
 .moveGhostMarowakLeft
 	hlcoord 17, 0
 	ld de, 20
@@ -766,7 +769,7 @@ DoBallTossSpecialEffects:
 	ret
 .isTrainerBattle ; if it's a trainer battle, shorten the animation by one frame
 	ld a, [wSubAnimCounter]
-	cp 3
+	cp 2
 	ret nz
 	dec a
 	ld [wSubAnimCounter], a
@@ -1101,13 +1104,13 @@ AnimationDarkenMonPalette:
 	lb bc, $f9, $f4
 	jr SetAnimationBGPalette
 
-AnimationUnusedPalette1:
-	lb bc, $fe, $f8
-	jr SetAnimationBGPalette
+;AnimationUnusedPalette1:
+;	lb bc, $fe, $f8
+;	jr SetAnimationBGPalette
 
-AnimationUnusedPalette2:
-	lb bc, $ff, $ff
-	jr SetAnimationBGPalette
+;AnimationUnusedPalette2:
+;	lb bc, $ff, $ff
+;	jr SetAnimationBGPalette
 
 AnimationResetScreenPalette:
 ; Restores the screen's palette to the normal palette.
@@ -1165,12 +1168,12 @@ AnimationWaterDropletsEverywhere:
 	ld a, 16
 	ld [wBaseCoordY], a
 	ld a, 0
-	ld [wUnusedD08A], a
+;	ld [wUnusedD08A], a
 	call _AnimationWaterDroplets
 	ld a, 24
 	ld [wBaseCoordY], a
 	ld a, 32
-	ld [wUnusedD08A], a
+;	ld [wUnusedD08A], a
 	call _AnimationWaterDroplets
 	dec d
 	jr nz, .loop
@@ -1352,7 +1355,7 @@ BattleAnimWriteOAMEntry:
 	add 8
 	ld e, a
 	ld [hli], a
-	cp 40
+	cp 72
 	jr c, .asm_793d8
 	ld a, [wdef5]
 	inc a
@@ -1769,7 +1772,7 @@ AnimationShootManyBallsUpward:
 	ld a, $50 ; y coordinate for "energy" ball pillar
 	jr z, .player
 	ld hl, UpwardBallsAnimXCoordinatesEnemyTurn
-	ld a, $28 ; y coordinate for "energy" ball pillar
+	ld a, $27 ; y coordinate for "energy" ball pillar
 .player
 	ld [wSavedY], a
 .loop

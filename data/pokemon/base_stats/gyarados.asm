@@ -18,7 +18,7 @@
 	     WATER_GUN,    ICE_BEAM,     BLIZZARD,     HYPER_BEAM,   RAGE,         \
 	     DRAGON_RAGE,  THUNDERBOLT,  THUNDER,      MIMIC,        DOUBLE_TEAM,  \
 	     REFLECT,      BIDE,         FIRE_BLAST,   SKULL_BASH,   REST,         \
-	     SUBSTITUTE,   RAZOR_WIND,   SURF,         STRENGTH
+	     SUBSTITUTE,   RAZOR_WIND,   FLY,	       SURF,         STRENGTH
 	; end
 
 	db 0 ; padding

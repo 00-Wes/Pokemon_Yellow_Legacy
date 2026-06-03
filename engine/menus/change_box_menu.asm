@@ -19,4 +19,3 @@ LoadBillsPCExtraTiles::
 	ld hl, vChars1 tile $48
 	lb bc, BANK(FromToChangeBoxPrompt), 5
 	jp CopyVideoDataDouble
-

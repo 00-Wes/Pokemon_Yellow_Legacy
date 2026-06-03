@@ -6,8 +6,9 @@ _CeruleanBadgeHouseMiddleAgedManText::
 	para "I see you have"
 	line "at least one."
 
-	para "Those BADGEs have"
-	line "amazing secrets!"
+	para "Some of those"
+	line "BADGEs have"
+	cont "amazing secrets!"
 	prompt
 
 _CeruleanBadgeHouseMiddleAgedManWhichBadgeText::
@@ -34,19 +35,13 @@ _CeruleanBadgeHouseBoulderBadgeText::
 	prompt
 
 _CeruleanBadgeHouseCascadeBadgeText::
-	text "#MON up to L30"
-	line "will obey you."
-
-	para "Any higher, they"
-	line "become unruly!"
-
-	para "It also lets you"
-	line "use CUT outside"
-	cont "of battle."
+	text "It lets you use"
+	line "CUT outside of"
+	cont "battle."
 	prompt
 
 _CeruleanBadgeHouseThunderBadgeText::
-	text "The SPEED of all"
+	text "The DEFENSE of all"
 	line "#MON increases"
 	cont "a little bit."
 
@@ -56,13 +51,7 @@ _CeruleanBadgeHouseThunderBadgeText::
 	prompt
 
 _CeruleanBadgeHouseRainbowBadgeText::
-	text "#MON up to L50"
-	line "will obey you."
-
-	para "Any higher, they"
-	line "become unruly!"
-
-	para "It also lets you"
-	line "use STRENGTH out-"
-	cont "side of battle."
+	text "It lets you use"
+	line "STRENGTH outside"
+	cont "of battle."
 	prompt

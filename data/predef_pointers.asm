@@ -65,6 +65,7 @@ PredefPointers::
 	add_predef FlashScreen
 	add_predef GetTileAndCoordsInFrontOfPlayer
 	add_predef StatusScreenOriginal
+	add_predef StatusScreenLoop
 	add_predef InternalClockTradeAnim
 	add_predef TrainerEngage
 	add_predef IndexToPokedex
@@ -109,3 +110,4 @@ PredefPointers::
 	add_predef DisplayElevatorFloorMenu
 	add_predef OaksAideScript
 	add_predef TryFieldMove
+	add_predef SetAttackAnimPal

@@ -69,15 +69,10 @@ OverworldLoopLessDelay::
 	bit 7, a ; are we simulating button presses?
 	jr z, .notSimulating
 	ldh a, [hJoyHeld]
-	jr .checkIfSelectIsPressed
+	jr .checkIfStartIsPressed
 .notSimulating
 	ldh a, [hJoyPressed]
-.checkIfSelectIsPressed
-	bit BIT_SELECT, a
-	jr z, .selectButtonNotPressed
-; if SELECT is pressed
-	farcall TryRideBike
-.selectButtonNotPressed
+.checkIfStartIsPressed
 	bit BIT_START, a
 	jr z, .startButtonNotPressed
 ; if START is pressed
@@ -86,13 +81,25 @@ OverworldLoopLessDelay::
 	jp .displayDialogue
 .startButtonNotPressed
 	bit BIT_A_BUTTON, a
+	jr nz, .aorSelectPressed ; PureRGBnote: ADDED: functionality that happens when pressing SELECT in overworld (bicycle)
+	bit BIT_SELECT, a
 	jp z, .checkIfDownButtonIsPressed
+.aorSelectPressed
 ; if A is pressed
 	ld a, [wd730]
 	bit 2, a
 	jp nz, .noDirectionButtonsPressed
 	call IsPlayerCharacterBeingControlledByGame
 	jr nz, .checkForOpponent
+;;;;;;;;;; PureRGBnote: ADDED: functionality that happens when pressing SELECT in overworld (bicycle)
+.trySelectingBikeRod
+	ldh a, [hJoyPressed]
+	bit BIT_SELECT, a	;is Select being pressed?
+	jr z, .notSelect
+	callfar CheckForRodBike
+	jp OverworldLoop
+.notSelect
+;;;;;;;;;;
 	call CheckForHiddenObjectOrBookshelfOrCardKeyDoor
 	ldh a, [hItemAlreadyFound]
 	and a

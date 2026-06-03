@@ -346,7 +346,7 @@ ExeggutorEvosMoves:
 	db 25, REFLECT
 	db 28, STOMP
 	db 32, STUN_SPORE
-	db 40, EGG_BOMB
+	db 40, BARRAGE
 	db 45, PSYCHIC_M
 	db 48, SLEEP_POWDER
 	db 0
@@ -375,7 +375,7 @@ ExeggcuteEvosMoves:
 	db 20, MEGA_DRAIN
 	db 25, REFLECT
 	db 32, STUN_SPORE
-	db 40, EGG_BOMB
+	db 40, BARRAGE
 	db 45, PSYCHIC_M
 	db 48, SLEEP_POWDER
 	db 0
@@ -732,7 +732,7 @@ SlowpokeEvosMoves:
 
 KadabraEvosMoves:
 ; Evolutions
-	db EVOLVE_LEVEL, 42, ALAKAZAM
+	db EVOLVE_TRADE, 1, ALAKAZAM
 	db 0
 ; Learnset
 	db 16, CONFUSION
@@ -745,7 +745,7 @@ KadabraEvosMoves:
 
 GravelerEvosMoves:
 ; Evolutions
-	db EVOLVE_LEVEL, 38, GOLEM
+	db EVOLVE_TRADE, 1, GOLEM
 	db 0
 ; Learnset
 	db 6, DEFENSE_CURL
@@ -775,7 +775,7 @@ ChanseyEvosMoves:
 
 MachokeEvosMoves:
 ; Evolutions
-	db EVOLVE_LEVEL, 38, MACHAMP
+	db EVOLVE_TRADE, 1, MACHAMP
 	db 0
 ; Learnset
 	db 5, LEER
@@ -2044,7 +2044,7 @@ MissingNo92EvosMoves:
 
 HaunterEvosMoves:
 ; Evolutions
-	db EVOLVE_LEVEL, 42, GENGAR
+	db EVOLVE_TRADE, 1, GENGAR
 	db 0
 ; Learnset
 	db 10, GLARE

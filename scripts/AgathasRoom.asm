@@ -125,6 +125,10 @@ AgathasRoomAgathaEndBattleScript:
 .continue
 	ldh [hSpriteIndexOrTextID], a
 	call DisplayTextID
+;;;;;;;;;; PureRGBnote: ADDED: sound effect for the doors opening
+	ld a, SFX_GO_INSIDE
+	call PlaySound
+;;;;;;;;;;
 	ld a, SCRIPT_CHAMPIONSROOM_PLAYER_ENTERS
 	ld [wChampionsRoomCurScript], a
 	ret

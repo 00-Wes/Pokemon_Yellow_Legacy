@@ -90,6 +90,7 @@ PKMNLeaguePCText: db "<PKMN>LEAGUE@"
 LogOffPCText:     db "LOG OFF@"
 
 BillsPC_::
+	ld hl, wd730
 	set BIT_NO_TEXT_DELAY, [hl]
 	xor a
 	ld [wParentMenuItem], a
@@ -190,6 +191,7 @@ ExitBillsPC:
 	call LoadScreenTilesFromBuffer2
 	pop af
 	ld [wListScrollOffset], a
+	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl]
 	ret
 
@@ -201,6 +203,7 @@ BillsPCDeposit:
 	ld a, [wPartyCount]
 	dec a
 	jr nz, .partyLargeEnough
+  	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, CantDepositLastMonText
 	call PrintText
@@ -209,6 +212,7 @@ BillsPCDeposit:
 	ld a, [wBoxCount]
 	cp MONS_PER_BOX
 	jr nz, .boxNotFull
+	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, BoxFullText
 	call PrintText
@@ -271,6 +275,7 @@ BillsPCDeposit:
 	ld a, [wPartyCount]
 	dec a
 	jp z, BillsPCMenu ; if 1 pokemon left in party, exit the menu automatically
+	ld hl, wd730
 	set BIT_NO_TEXT_DELAY, [hl] ; turn off letter printing delay so we get instant text
 	ld hl, WhatText
 	call PrintText
@@ -286,6 +291,7 @@ BillsPCWithdraw:
 	ld a, [wBoxCount]
 	and a
 	jr nz, .boxNotEmpty
+	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, NoMonText
 	call PrintText
@@ -296,6 +302,7 @@ BillsPCWithdraw:
 	ld a, [wPartyCount]
 	cp PARTY_LENGTH
 	jr nz, .partyNotFull
+	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl] ; turn on letter printing delay so we don't get instant text
 	ld hl, CantTakeMonText
 	call PrintText
@@ -347,6 +354,7 @@ BillsPCWithdraw:
 	jp BillsPCWithdraw ; otherwise go back to the menu
 .redrawTextBoxAndCurrentBox
 	push hl
+	ld hl, wd730
 	set BIT_NO_TEXT_DELAY, [hl] ; turn off letter printing delay so we get instant text
 	pop hl
 	call PrintText
@@ -361,11 +369,13 @@ BillsPCRelease:
 	ld a, [wBoxCount]
 	and a
 	jr nz, .loop
+	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, NoMonText
 	call PrintText
 	jp BillsPCMenu
 .loop
+	ld hl, wd730
 	set BIT_NO_TEXT_DELAY, [hl]
 	ld hl, ReleaseWhichMonText
 	call PrintText
@@ -375,6 +385,7 @@ BillsPCRelease:
 	call BillsPCBackupListIndex
 	callfar IsThisPartymonStarterPikachu_Box
 	jr c, .asm_216cb
+	ld hl, wd730
 	res BIT_NO_TEXT_DELAY, [hl]
 	ld hl, OnceReleasedText
 	call PrintText

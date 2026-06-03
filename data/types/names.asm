@@ -9,6 +9,7 @@ TypeNames:
 	dw .Rock
 	dw .Normal
 	dw .Bug
+	dw .Dragon
 	dw .Ghost
 
 REPT UNUSED_TYPES_END - UNUSED_TYPES
@@ -21,7 +22,6 @@ ENDR
 	dw .Electric
 	dw .Psychic
 	dw .Ice
-	dw .Dragon
 
 	assert_table_length NUM_TYPES
 

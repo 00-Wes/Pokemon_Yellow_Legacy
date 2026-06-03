@@ -1,20 +1,20 @@
 _CeladonMart5FGentlemanText::
-	text "#MON ability"
-	line "enhancers can be"
-	cont "bought only here."
+	text "#MON vitamins"
+	line "can only be"
+	cont "bought here."
 
-	para "Use CALCIUM to"
-	line "increase SPECIAL"
-	cont "abilities."
+	para "Use a CALCIUM"
+	line "to increase your"
+	cont "#MONs SPECIAL."
 
-	para "Use CARBOS to"
-	line "increase SPEED."
+	para "Or CARBOS to"
+	line "increase its"
+	cont "SPEED."
 	done
 
 _CeladonMart5FSailorText::
 	text "I'm here for"
-	line "#MON ability"
-	cont "enhancers."
+	line "#MON vitamins."
 
 	para "PROTEIN increases"
 	line "ATTACK power."

@@ -269,12 +269,6 @@ _GotOffBicycleText2::
 	text "."
 	prompt
 
-_NoBicycleText1::
-	text "Pressing SELECT"
-	line "uses the Bicycle"
-	cont "if you have one."
-	prompt
-
 _ThrewAwayItemText::
 	text "Threw away"
 	line "@"
@@ -439,6 +433,40 @@ _AfterTrade3Text::
 	text_ram wInGameTradeGiveMonName
 	text " is"
 	line "doing great!"
+	done
+
+_WannaTrade4Text::
+	text "Hello, I am"
+	line "researching"
+	cont "#MON that"
+	cont "evolve when"
+	cont "traded. If you"
+	cont "have one and"
+	cont "trade it to"
+	cont "me, I will trade"
+	cont "it right back to"
+	cont "you. I just need"
+	cont "you to have that"
+	cont "#MON in the"
+	cont "last slot of your"
+	cont "party in order"
+	cont "for it to work."
+
+	para "So are you"
+	line "interested?"
+	done
+	
+_NoTrade4Text::
+	text "Ok, maybe next"
+	line "time then."
+	done
+	
+_Thanks4Text::
+	text "Excellent!"
+	line "That gave me tons"
+	cont "of data to go"
+	cont "over for my"
+	cont "research."
 	done
 
 _NothingToCutText::

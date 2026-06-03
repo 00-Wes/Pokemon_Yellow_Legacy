@@ -10,7 +10,7 @@ DEF PHYSICAL EQU const_value
 	const ROCK         ; $05
 	const BIRD         ; $06
 	const BUG          ; $07
-	const DRAGON       ; $09
+	const DRAGON       ; $1A
 
 DEF SPECIAL EQU const_value
 	const GHOST        ; $08

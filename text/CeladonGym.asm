@@ -82,13 +82,10 @@ _CeladonGymRematchPostBattleText::
 
 _CeladonGymRainbowBadgeInfoText::
 	text "The RAINBOWBADGE"
-	line "will make #MON"
-	cont "up to L50 obey."
-
-	para "It also allows"
-	line "#MON to use"
-	cont "STRENGTH in and"
-	cont "out of battle."
+	line "Allows #MON to"
+	cont "use STRENTH in"
+	cont "and out of"
+	cont "battle."
 
 	para "Please also take"
 	line "this with you."
