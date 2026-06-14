@@ -740,6 +740,32 @@ CheckNumAttacksLeft:
 	ret
 
 HandleEnemyMonFainted:
+	ld b, ATTACK_UP1_EFFECT			; the first +1 effect (see \constants\move_effect_constants.asm)
+	ld c, EVASION_UP1_EFFECT		; the last +1 effect, will be used to end the upcoming loop
+	ld de, wPlayerMoveEffect
+.checkOneStageBoostLoop
+	ld a, [de]				; 'a' now equals [wPlayerMoveEffect]
+	cp b					; does the effect in 'a' match the current effect in 'b'?
+	jr z, .boostBattleMonStats		; if so, boost appropriate Mon stat before the enemy faints
+	ld a, b					; copy 'b' into 'a'
+	inc b					; 'b' now points to the next +1 effect
+	cp c					; does 'a' equal 'c' (EVASION_UP1_EFFECT, i.e. end of +1 effects list)?
+	jr nz, .checkOneStageBoostLoop	; if not, loop back and check for next +1 effect
+; we're done checking for +1 effects, now we check for +2 effects
+	ld b, ATTACK_UP2_EFFECT			; the first +2 effect
+	ld c, EVASION_UP2_EFFECT		; the last +2 effect, will be used to end the upcoming loop
+.checkTwoStageBoostLoop
+	ld a, [de]				; 'a' once again equals [wPlayerMoveEffect]
+	cp b					; same process as above, except we're checking for +2 boosts instead
+	jr z, .boostBattleMonStats
+	ld a, b
+	inc b
+	cp c
+	jr nz, .checkTwoStageBoostLoop
+	jr .faintEnemyPokemon			; if the KO-ing move does not boost stats, jump to .faintEnemyPokemon subroutine
+.boostBattleMonStats
+	call StatModifierUpEffect		; this is why we needed the "double colon"
+.faintEnemyPokemon					; finally, things proceed as normal from here
 	xor a
 	ld [wInHandlePlayerMonFainted], a
 	call FaintEnemyPokemon
@@ -1013,6 +1039,32 @@ PlayBattleVictoryMusic:
 	jp Delay3
 
 HandlePlayerMonFainted:
+	ld b, ATTACK_UP1_EFFECT
+	ld c, EVASION_UP1_EFFECT
+	ld de, wEnemyMoveEffect
+.checkOneStageBoostLoop
+	ld a, [de]
+	cp b
+	jr z, .boostEnemyMonStats
+	ld a, b
+	inc b
+	cp c
+	jr nz, .checkOneStageBoostLoop
+; we're done checking for +1 effects, now we check for +2 effects
+	ld b, ATTACK_UP2_EFFECT
+	ld c, EVASION_UP2_EFFECT
+.checkTwoStageBoostLoop
+	ld a, [de]
+	cp b
+	jr z, .boostEnemyMonStats
+	ld a, b
+	inc b
+	cp c
+	jr nz, .checkTwoStageBoostLoop
+	jr .faintPlayerPokemon
+.boostEnemyMonStats
+	call StatModifierUpEffect
+.faintPlayerPokemon
 	ld a, 1
 	ld [wInHandlePlayerMonFainted], a
 	call RemoveFaintedPlayerMon

@@ -308,10 +308,10 @@ HoFPrintTextAndDelay:
 	jp DelayFrames
 
 YellowText:
-	db "YELLOW@"
+	db "ELITE@"
 
 LegacyText:
-	db "LEGACY@"
+	db "YELLOW@"
 
 HardText:
 	db "HARD@"

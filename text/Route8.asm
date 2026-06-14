@@ -1,7 +1,10 @@
 _Route8SuperNerd1BattleText::
-	text "You look good at"
-	line "#MON, but"
-	cont "how's your chem?"
+	text "You look like you"
+	line "are good at"
+	cont "#MON,"
+
+	para "but how good are"
+	line "you at chemistry?"
 	done
 
 _Route8SuperNerd1EndBattleText::

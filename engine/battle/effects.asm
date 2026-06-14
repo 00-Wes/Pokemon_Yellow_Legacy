@@ -11,10 +11,10 @@ _JumpMoveEffect:
 	ld a, [wEnemyMoveEffect]
 .next1
 	dec a ; subtract 1, there is no special effect for 00
-	add a ; x2, 16bit pointers
-	ld hl, MoveEffectPointerTable
-	ld b, 0
-	ld c, a
+	ld bc, MoveEffectPointerTable
+	ld h, 0
+	ld l, a	
+	add hl, hl
 	add hl, bc
 	ld a, [hli]
 	ld h, [hl]
@@ -107,6 +107,8 @@ PoisonEffect:
 	cp POISON ; can't poison a poison-type target
 	jr z, .noEffect
 	ld a, [de]
+	cp POISON_EFFECT2	; is 'guaranteed poison' the current move's side effect?
+	jr z, .inflictPoison	; if so, bypass RNG and jump straight to .inflictPoison
 	cp POISON_SIDE_EFFECT1
 	ld b, 20 percent + 1 ; chance of poisoning
 	jr z, .sideEffectTest
@@ -231,6 +233,10 @@ FreezeBurnParalyzeEffect:
 	ld b, 10 percent + 1
 	jr .regular_effectiveness
 .asm_3f2c7
+	cp PARALYZE_EFFECT2      ; is 'guaranteed paralysis' our move's secondary effect?
+	jr z, .paralyze1         ; if so, bypass RNG call and jump straight to paralyzing the enemy
+	cp BURN_EFFECT           ; same check for 'guaranteed burn'
+	jr z, .burn1             ; jump straight to burning the enemy
 	cp PARALYZE_SIDE_EFFECT1 + 1
 	ld b, 10 percent + 1
 	jr c, .regular_effectiveness
@@ -248,7 +254,7 @@ FreezeBurnParalyzeEffect:
 	jr z, .burn1
 	cp FREEZE_SIDE_EFFECT
 	jr z, .freeze1
-; .paralyze1
+ .paralyze1	; we're just un-commenting this to create a destination for the 'jr z, .paralyze1' inserted above
 	ld a, 1 << PAR
 	ld [wEnemyMonStatus], a
 	call QuarterSpeedDueToParalysis ; quarter speed of affected mon
@@ -294,6 +300,10 @@ FreezeBurnParalyzeEffect:
 	ld b, 10 percent + 1
 	jr .regular_effectiveness2
 .asm_3f341
+	cp PARALYZE_EFFECT2      ; is 'guaranteed paralysis' our opponent's secondary effect?
+	jr z, .paralyze2         ; if so, bypass RNG call and jump straight to paralyzing our Mon
+	cp BURN_EFFECT           ; same check for burn
+	jr z, .burn2             ; jump straight to burning our Mon
 	cp PARALYZE_SIDE_EFFECT1 + 1
 	ld b, 10 percent + 1
 	jr c, .regular_effectiveness2
@@ -311,7 +321,7 @@ FreezeBurnParalyzeEffect:
 	jr z, .burn2
 	cp FREEZE_SIDE_EFFECT
 	jr z, .freeze2
-; .paralyze2
+ .paralyze2	; un-commenting this, same as before
 	ld a, 1 << PAR
 	ld [wBattleMonStatus], a
 	call QuarterSpeedDueToParalysis
@@ -383,7 +393,7 @@ FireDefrostedText:
 	text_far _FireDefrostedText
 	text_end
 
-StatModifierUpEffect:
+StatModifierUpEffect::
 	ld hl, wPlayerMonStatMods
 	ld de, wPlayerMoveEffect
 	ldh a, [hWhoseTurn]
@@ -554,6 +564,14 @@ RestoreOriginalStatModifier:
 	dec [hl]
 
 PrintNothingHappenedText:
+	ld a, [hWhoseTurn]
+	and a
+	ld a, [wPlayerMovePower]
+	jr z, .gotUsersPower3
+	ld a, [wEnemyMovePower]
+.gotUsersPower3
+	and a
+	ret nz
 	ld hl, NothingHappenedText
 	jp PrintText
 
@@ -590,6 +608,9 @@ StatModifierDownEffect:
 	ld hl, wPlayerMonStatMods
 	ld de, wEnemyMoveEffect
 	ld bc, wPlayerBattleStatus1
+	ld a, [wEnemyMovePower]		; if enemy move power != 0, we skip the RNG call that is
+	and a				; applied to NPC trainers' status moves... otherwise, their
+	jr nz, .statModifierDownEffect	; "guaranteed" post-damage effects will fail 25% of the time
 .statModifierDownEffect
 	call CheckTargetSubstitute ; can't hit through substitute
 	jp nz, MoveMissed
@@ -606,6 +627,14 @@ StatModifierDownEffect:
 	push hl
 	push de
 	push bc
+	ld a, [hWhoseTurn]		; begin process for finding power of last move used
+	and a				; identify whose turn it is, 0 = player, nonzero = enemy
+	ld a, [wPlayerMovePower]	; load player move power
+	jr z, .checkDamagingMove	; jump if it is player's turn
+	ld a, [wEnemyMovePower]		; otherwise, load enemy move power
+.checkDamagingMove			; checks if status move or damaging move w/ guaranteed side effect
+	and a				; did the last move have 0 power?
+	jr nz, .getStatMod1		; if not (i.e. it's a damaging move), skip acc. check on side effect
 	call MoveHitTest ; apply accuracy tests
 	pop bc
 	pop de
@@ -616,6 +645,12 @@ StatModifierDownEffect:
 	ld a, [bc]
 	bit INVULNERABLE, a ; fly/dig
 	jp nz, MoveMissed
+	jr .getStatMod2
+.getStatMod1	; we still need to pop these values, as in the subroutine above
+	pop bc
+	pop de
+	pop hl
+.getStatMod2	; now back to the usual prep for stat modification
 	ld a, [de]
 	sub ATTACK_DOWN1_EFFECT
 	cp EVASION_DOWN1_EFFECT + $3 - ATTACK_DOWN1_EFFECT ; covers all -1 effects
@@ -752,6 +787,14 @@ CantLowerAnymore:
 	ld a, [de]
 	cp ATTACK_DOWN_SIDE_EFFECT
 	ret nc
+	ld a, [hWhoseTurn]
+	and a
+	ld a, [wPlayerMovePower]
+	jr z, .gotUsersPower4
+	ld a, [wEnemyMovePower]
+.gotUsersPower4
+	and a
+	ret nz
 	ld hl, NothingHappenedText
 	jp PrintText
 
@@ -1178,6 +1221,14 @@ RecoilEffect:
 	jpfar RecoilEffect_
 
 ConfusionSideEffect:
+	ld a, [hWhoseTurn]
+	and a
+	ld a, [wPlayerMoveEffect]
+	jr z, .checkGuaranteedConfusionEffect
+	ld a, [wEnemyMoveEffect]
+.checkGuaranteedConfusionEffect
+	cp CONFUSION_EFFECT2
+	jr z, ConfusionSideEffectSuccess
 	call BattleRandom
 	cp 10 percent ; chance of confusion
 	ret nc
@@ -1213,7 +1264,11 @@ ConfusionSideEffectSuccess:
 	ld [bc], a ; confusion status will last 2-5 turns
 	pop af
 	cp CONFUSION_SIDE_EFFECT
-	call nz, PlayCurrentMoveAnimation2
+	jr z, .displayBecameConfusedText
+	cp CONFUSION_EFFECT2
+	jr z, .displayBecameConfusedText
+	call PlayCurrentMoveAnimation2
+.displayBecameConfusedText
 	ld hl, BecameConfusedText
 	jp PrintText
 
@@ -1223,6 +1278,8 @@ BecameConfusedText:
 
 ConfusionEffectFailed:
 	cp CONFUSION_SIDE_EFFECT
+	ret z
+	cp CONFUSION_EFFECT2
 	ret z
 	ld c, 50
 	call DelayFrames

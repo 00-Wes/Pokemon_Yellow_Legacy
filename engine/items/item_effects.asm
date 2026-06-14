@@ -700,12 +700,6 @@ ItemUseBicycle:
 	ld a, $00
 	ld [wPikachuSpawnState], a
 	call PlayDefaultMusic ; play walking music
-;;;;;;;;;; PureRGBnote: CHANGED: the text telling you "got on bike" and "got off bike" each only display once per playthrough to be less annoying
-	CheckEvent EVENT_SAW_GOT_OFF_BIKE_TEXT
-	jr nz, .noTextGetOff  
-	SetEvent EVENT_SAW_GOT_OFF_BIKE_TEXT
-	ld hl, GotOffBicycleText ; this text only displays once to be less annoying
-	call PrintText
 ;;;;;;;;;;
 .noTextGetOff
 	ret
@@ -720,12 +714,6 @@ ItemUseBicycle:
 	call PlayDefaultMusic ; play bike riding music
 	xor a
 	ld [wWalkBikeSurfState], a
-;;;;;;;;;;  PureRGBnote: CHANGED: the text telling you "got on bike" and "got off bike" each only display once per playthrough to be less annoying
-	CheckEvent EVENT_SAW_GOT_ON_BIKE_TEXT
-	jr nz, .noTextGetOn 
-	SetEvent EVENT_SAW_GOT_ON_BIKE_TEXT
-	ld hl, GotOnBicycleText
-	call PrintText
 .noTextGetOn
 ;;;;;;;;;;
 	ld a, $1

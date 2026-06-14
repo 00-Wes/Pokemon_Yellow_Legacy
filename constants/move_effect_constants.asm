@@ -76,10 +76,10 @@
 	const DEFENSE_DOWN_SIDE_EFFECT   ; $45
 	const SPEED_DOWN_SIDE_EFFECT     ; $46
 	const SPECIAL_DOWN_SIDE_EFFECT   ; $47
-	const_skip                       ; $48
-	const_skip                       ; $49
-	const_skip                       ; $4A
-	const_skip                       ; $4B
+	const CONFUSION_EFFECT2          ; $48 guaranteed confusion after dealing damage
+	const POISON_EFFECT2             ; $49 guaranteed poison after dealing damage
+	const PARALYZE_EFFECT2           ; $4A guaranteed paralysis after dealing damage
+	const BURN_EFFECT                ; $4B guaranteed burn after dealing damage
 	const CONFUSION_SIDE_EFFECT      ; $4C
 	const TWINEEDLE_EFFECT           ; $4D
 	const_skip                       ; $4E

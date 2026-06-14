@@ -16,6 +16,7 @@ REPT UNUSED_TYPES_END - UNUSED_TYPES
 	dw .Normal
 ENDR
 
+
 	dw .Fire
 	dw .Water
 	dw .Grass

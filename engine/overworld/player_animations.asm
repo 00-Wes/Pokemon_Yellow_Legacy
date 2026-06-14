@@ -233,7 +233,7 @@ _LeaveMapAnim::
 	ld hl, wFlyAnimCounter
 	ld a, 9
 	ld [hli], a ; wFlyAnimCounter
-	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing left)
+	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld de, FlyAnimationScreenCoords_Pikachu3
 	call DoFlyAnimation
 
