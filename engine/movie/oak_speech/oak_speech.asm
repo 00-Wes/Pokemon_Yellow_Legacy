@@ -58,6 +58,10 @@ OakSpeech:
 	call LoadTextBoxTilePatterns
 	call PrepareOakSpeech
 	predef InitPlayerData2
+	ld a, LOW(MapSongBanks)
+	ld [wMapSongsPointer], a
+	ld a, HIGH(MapSongBanks)
+	ld [wMapSongsPointer + 1], a
 	ld hl, wNumBoxItems
 	ld a, POTION
 	ld [wcf91], a

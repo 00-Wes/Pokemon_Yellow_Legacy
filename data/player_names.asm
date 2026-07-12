@@ -1,6 +1,6 @@
 DefaultNamesPlayer:
 	db   "NEW NAME"
-	next "YELLOW"
+	next "RED"
 	next "ASH"
 	next "JACK"
 	db   "@"

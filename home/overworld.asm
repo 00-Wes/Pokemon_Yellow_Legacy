@@ -1988,7 +1988,10 @@ asm_0dbd:
 	push af
 	ld a, BANK(MapSongBanks)
 	call BankswitchCommon
-	ld hl, MapSongBanks
+	ld hl, wMapSongsPointer
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
 	add hl, bc
 	add hl, bc
 	ld a, [hli]

@@ -176,6 +176,18 @@ SilphCo11FGiovanniAfterBattleScript:
 	farcall SilphCo11FTeamRocketLeavesScript
 	call UpdateSprites
 	call Delay3
+	ld a, LOW(MapSongBanksAfterSilph)
+	ld [wMapSongsPointer], a
+	ld a, HIGH(MapSongBanksAfterSilph)
+	ld [wMapSongsPointer + 1], a
+	ld a, SFX_STOP_ALL_MUSIC
+	ld [wNewSoundID], a
+	call PlaySound
+	ld a, MUSIC_CITIES1
+	ld [wMapMusicSoundID], a
+	ld a, BANK(Music_Cities1)
+	ld [wMapMusicROMBank], a
+	call PlayDefaultMusic
 	call GBFadeInFromBlack
 	SetEvent EVENT_BEAT_SILPH_CO_GIOVANNI
 	xor a

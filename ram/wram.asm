@@ -2169,7 +2169,8 @@ wTilesetTalkingOverTiles:: ds 3
 
 wGrassTile:: db
 
-	ds 4
+	ds 2
+wMapSongsPointer:: dw
 
 wNumBoxItems:: db
 ; item, quantity

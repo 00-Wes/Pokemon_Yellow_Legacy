@@ -132,7 +132,7 @@ Moves:
 	move MIRROR_MOVE,  MIRROR_MOVE_EFFECT,           0, FLYING,       100, 20
 	move SELFDESTRUCT, EXPLODE_EFFECT,             200, NORMAL,       100,  5
 	move EGG_BOMB,     NO_ADDITIONAL_EFFECT,       100, NORMAL,       100, 15
-	move LICK,         PARALYZE_EFFECT,             20, NORMAL,       100, 20
+	move LICK,         PARALYZE_EFFECT2,            20, NORMAL,       100, 20
 	move SMOG,         POISON_SIDE_EFFECT2,         40, POISON,        80, 20
 	move SLUDGE,       POISON_SIDE_EFFECT2,         90, POISON,       100, 20
 	move BONE_CLUB,    FLINCH_SIDE_EFFECT1,         65, GROUND,       100, 20

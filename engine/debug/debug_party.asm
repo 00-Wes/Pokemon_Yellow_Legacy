@@ -17,6 +17,7 @@ DebugNewGameParty: ; unreferenced except in _DEBUG
 	db PERSIAN, 80
 	db JIGGLYPUFF, 15
 	db STARTER_PIKACHU, 5
+	db GASTLY, 22
 	db -1 ; end
 
 PrepareNewGameDebug: ; dummy except in _DEBUG
@@ -35,8 +36,8 @@ IF DEF(_DEBUG)
 
 	call SetDebugNewGameParty
 
-	; Pikachu gets Surf.
-	ld a, SURF
+	; Pikachu gets Fly.
+	ld a, FLY
 	ld hl, wPartyMon4Moves + 2
 	ld [hl], a
 

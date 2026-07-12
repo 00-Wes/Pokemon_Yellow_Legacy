@@ -1331,7 +1331,7 @@ ShakeEnemyHUD_WritePlayerMonPicOAM:
 	ld e, a
 	ld b, 5
 .innerLoop
-	call BattleAnimWriteOAMEntry
+	call .writeMonPicOAM
 	inc d
 	dec b
 	jr nz, .innerLoop
@@ -1343,6 +1343,19 @@ ShakeEnemyHUD_WritePlayerMonPicOAM:
 	add 8
 	ld [wBaseCoordX], a
 	jr .loop
+
+.writeMonPicOAM
+	ld a, e
+	add 8
+	ld e, a
+	ld [hli], a
+	ld a, [wBaseCoordX]
+	ld [hli], a
+	ld a, d
+	ld [hli], a
+	ld a, 2 ; palette OBP2
+	ld [hli], a
+	ret
 
 BattleAnimWriteOAMEntry:
 ; Y coordinate = e (increased by 8 each call, before the write to OAM)

@@ -1,6 +1,6 @@
 DefaultNamesPlayerList:
 	db "NEW NAME@"
-	db "YELLOW@"
+	db "RED@"
 	db "ASH@"
 	db "JACK@"
 

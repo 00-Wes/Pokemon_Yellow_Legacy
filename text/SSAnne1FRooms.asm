@@ -98,8 +98,9 @@ _SSAnne1FRoomsGirl2Text::
 	done
 
 _SSAnne1FRoomsGentleman3Text::
-	text "Ssh! I'm a GLOBAL"
-	line "POLICE agent!"
+	text "Ssh! I'm an"
+	line "INTERNATIONAL"
+	cont "POLICE agent!"
 
 	para "I'm on the trail"
 	line "of TEAM ROCKET!"

@@ -152,8 +152,8 @@ AIMoveChoiceModification1:
 	ld a, [wEnemyMoveEffect]
 	cp DREAM_EATER_EFFECT
 	jp z, .checkAsleep
-	cp OHKO_EFFECT
-	jr z, .ohko
+;	cp OHKO_EFFECT ; 00-Wes note, I commented this check out since I changed OHKO's to hit regardless of speed
+;	jr z, .ohko
 	ld a, [wEnemyMovePower]
 	and a
 	jr nz, .nextMove
@@ -206,10 +206,10 @@ AIMoveChoiceModification1:
 	add $5 ; heavily discourage move
 	ld [hl], a
 	jr .nextMove
-.ohko
-	call WillOHKOMoveAlwaysFail
-	jp nc, .nextMove
-	jr .discourage
+;.ohko
+;	call WillOHKOMoveAlwaysFail
+;	jp nc, .nextMove
+;	jr .discourage
 .checkDisabled
 	ld a, [wPlayerDisabledMove] ; non-zero if the player has a disabled move
 	and a
@@ -367,13 +367,13 @@ CheckStatusImmunity:
 
 ;;;;;;;;;; PureRGBnote: ADDED: function that allows AI to avoid OHKO moves if they will never do anything to the player's pokemon due to speed differences
 WillOHKOMoveAlwaysFail:
-	call CompareSpeed
-	jr c, .userIsSlower
-	and a
-	ret
-.userIsSlower
-	scf
-	ret
+;	call CompareSpeed
+;	jr c, .userIsSlower
+;	and a
+;	ret
+;.userIsSlower
+;	scf
+;	ret
 ;;;;;;;;;;
 
 ; PureRGBnote: CHANGED: AKA the "Boost stats on the first turn" subroutine
