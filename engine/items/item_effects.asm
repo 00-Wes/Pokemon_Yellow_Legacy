@@ -105,36 +105,6 @@ ItemUseBall:
 
 ; Balls can't be used out of battle.
 	ld a, [wIsInBattle]
-	and a
-	jp z, ItemUseNotTime
-
-; Balls can't catch trainers' Pokémon.
-	dec a
-	jp nz, ThrowBallAtTrainerMon
-
-; If this is for the old man battle, skip checking if the party & box are full.
-	ld a, [wBattleType]
-	cp BATTLE_TYPE_OLD_MAN
-	jr z, .canUseBall
-	cp BATTLE_TYPE_PIKACHU
-	jr z, .canUseBall
-
-	ld a, [wPartyCount] ; is party full?
-	cp PARTY_LENGTH
-	jr nz, .canUseBall
-	ld a, [wBoxCount] ; is box full?
-	cp MONS_PER_BOX
-	jp z, BoxFullCannotThrowBall
-
-.canUseBall
-	xor a
-	ld [wCapturedMonSpecies], a
-
-	ld a, [wBattleType]
-	cp BATTLE_TYPE_SAFARI
-	jr nz, .skipSafariZoneCode
-
-.safariZone
 	ld hl, wNumSafariBalls
 	dec [hl] ; remove a Safari Ball
 
@@ -700,15 +670,9 @@ ItemUseBicycle:
 	ld a, $00
 	ld [wPikachuSpawnState], a
 	call PlayDefaultMusic ; play walking music
-;;;;;;;;;; PureRGBnote: CHANGED: the text telling you "got on bike" and "got off bike" each only display once per playthrough to be less annoying. 00-Wes note, I commented this out so now there is no text. Even the first time
-;	CheckEvent EVENT_SAW_GOT_OFF_BIKE_TEXT
-;	jr nz, .noTextGetOff  
-;	SetEvent EVENT_SAW_GOT_OFF_BIKE_TEXT
-;	ld hl, GotOffBicycleText ; this text only displays once to be less annoying
-;	call PrintText
-;;;;;;;;;;
-.noTextGetOff
-	ret
+	ld hl, GotOffBicycleText
+	jp PrintText
+
 .tryToGetOnBike
 	call IsBikeRidingAllowed
 	jp nc, NoCyclingAllowedHere
@@ -720,14 +684,8 @@ ItemUseBicycle:
 	call PlayDefaultMusic ; play bike riding music
 	xor a
 	ld [wWalkBikeSurfState], a
-;;;;;;;;;;  PureRGBnote: CHANGED: the text telling you "got on bike" and "got off bike" each only display once per playthrough to be less annoying. 00-Wes note, I commented this out so now there is no text. Even the first time
-;	CheckEvent EVENT_SAW_GOT_ON_BIKE_TEXT
-;	jr nz, .noTextGetOn 
-;	SetEvent EVENT_SAW_GOT_ON_BIKE_TEXT
-;	ld hl, GotOnBicycleText
-;	call PrintText
-.noTextGetOn
-;;;;;;;;;;
+	ld hl, GotOnBicycleText
+	call PrintText
 	ld a, $1
 	ld [wWalkBikeSurfState], a
 	ret
@@ -807,7 +765,6 @@ ItemUseSurfboard:
 	ld a, b
 	ld [wSimulatedJoypadStatesEnd], a
 	xor a
-	ld [wUnusedCD39], a
 	inc a
 	ld [wSimulatedJoypadStatesIndex], a
 	ret
@@ -941,8 +898,11 @@ ItemUseMedicine:
 	and a
 	jp z, Func_e4bf
 	ld a, [wWhichPokemon]
+	ld [wQuantityBagSlot], a
+	ld a, [wWhichPokemon]
 	push af
 	ld a, [wcf91]
+	ld [wQuantityItemID], a
 	push af
 	ld a, USE_ITEM_PARTY_MENU
 	ld [wPartyMenuTypeOrMessageID], a
@@ -958,6 +918,45 @@ ItemUseMedicine:
 	call DisplayPartyMenu
 .getPartyMonDataAddress
 	jp c, .canceledItemUse
+	ld a, [wcf91]
+	ld [wd11e], a
+	ld a, [wQuantityItemID]
+	cp HP_UP
+	jr c, .skipQuantityPrompt
+	cp RARE_CANDY + 1
+	jr nc, .skipQuantityPrompt
+	ld b, a
+	predef GetQuantityOfItemInBag
+	ld a, [wQuantityItemID]
+	cp RARE_CANDY
+	jr z, .setQuantityMaximum
+	ld a, b
+	cp 26
+	jr c, .setQuantityMaximum
+	ld b, 25
+.setQuantityMaximum
+	ld a, b
+	ld [wMaxItemQuantity], a
+	ld a, ITEMLISTMENU
+	ld [wListMenuID], a
+	ld a, 1
+	ldh [hJoy7], a
+	call DisplayChooseQuantityMenu
+	inc a
+	jp z, .canceledItemUse
+	ld a, [wItemQuantity]
+	ld [wMaxItemQuantity], a
+	ld a, [wWhichPokemon]
+	ld [wQuantityPartySlot], a
+	ld [wPartyAndBillsPCSavedMenuItem], a
+	ld a, USE_ITEM_PARTY_MENU
+	ld [wPartyMenuTypeOrMessageID], a
+	call DrawPartyMenu
+	ld a, [wQuantityPartySlot]
+	ld [wWhichPokemon], a
+	ld a, [wQuantityItemID]
+	ld [wcf91], a
+.skipQuantityPrompt
 	ld hl, wPartyMons
 	ld bc, wPartyMon2 - wPartyMon1
 	ld a, [wWhichPokemon]
@@ -965,9 +964,9 @@ ItemUseMedicine:
 	ld a, [wWhichPokemon]
 	ld [wUsedItemOnWhichPokemon], a
 	ld d, a
-	ld a, [wcf91]
+	ld a, [wd11e]
 	ld e, a
-	ld [wd0b5], a
+	ld [wd11e], a
 	pop af
 	push af
 	cp CALCIUM + 1
@@ -981,14 +980,15 @@ ItemUseMedicine:
 	pop af
 	ld [wcf91], a
 	pop af
+	ld a, [wUsedItemOnWhichPokemon]
 	ld [wWhichPokemon], a
 	ld a, [wPseudoItemID]
 	and a ; using Softboiled?
-	jr z, .checkItemType
+	jp z, .checkItemType
 ; if using softboiled
 	ld a, [wWhichPokemon]
 	cp d ; is the pokemon trying to use softboiled on itself?
-	jr z, ItemUseMedicine ; if so, force another choice
+	jp z, ItemUseMedicine ; if so, force another choice
 .checkItemType
 	ld a, [wcf91]
 	cp REVIVE
@@ -1444,7 +1444,7 @@ ItemUseMedicine:
 	ld a, 10
 	ld b, a
 	ld a, [hl] ; a = MSB of stat experience of the appropriate stat
-	cp 100 ; is there already at least 25600 (256 * 100) stat experience?
+	cp 250 ; is stat experience maxed out?
 	jr nc, .vitaminNoEffect ; if so, vitamins can't add any more
 	add b ; add 2560 (256 * 10) stat experience
 	jr nc, .noCarry3 ; a carry should be impossible here, so this will always jump
@@ -1452,7 +1452,56 @@ ItemUseMedicine:
 .noCarry3
 	ld [hl], a
 	pop hl
+	ld a, [wItemQuantity]
+	dec a
+	ld [wItemQuantity], a
+	jr z, .vitaminsDone
+	ld hl, wPartyMons
+	ld a, [wUsedItemOnWhichPokemon]
+	ld bc, wPartyMon2 - wPartyMon1
+	call AddNTimes
+	jp .useVitamin
+
+.vitaminsDone
+	ld hl, wPartyMons
+	ld a, [wQuantityPartySlot]
+	ld bc, wPartyMon2 - wPartyMon1
+	call AddNTimes
 	call .recalculateStats
+	call .printVitaminStatRose
+	ld a, [wQuantityBagSlot]
+	ld [wWhichPokemon], a
+	ld a, [wMaxItemQuantity]
+	ld [wItemQuantity], a
+	jp RemoveUsedItem
+
+.vitaminNoEffect
+	pop hl
+	ld a, [wMaxItemQuantity]
+	ld b, a
+	ld a, [wItemQuantity]
+	ld c, a
+	ld a, b
+	sub c
+	jr z, .showVitaminNoEffect
+	push af
+	ld hl, wPartyMons
+	ld a, [wQuantityPartySlot]
+	ld bc, wPartyMon2 - wPartyMon1
+	call AddNTimes
+	call .recalculateStats
+	pop af
+	ld [wItemQuantity], a
+	ld a, [wQuantityBagSlot]
+	ld [wWhichPokemon], a
+	call .printVitaminStatRose
+	call RemoveUsedItem
+.showVitaminNoEffect
+	ld hl, VitaminNoEffectText
+	call PrintText
+	jp GBPalWhiteOut
+
+.printVitaminStatRose
 	ld hl, VitaminStats
 	ld a, [wcf91]
 	sub HP_UP - 1
@@ -1472,17 +1521,15 @@ ItemUseMedicine:
 	ld de, wStringBuffer
 	ld bc, 10
 	call CopyData ; copy the stat's name to wStringBuffer
+	ld a, [wQuantityPartySlot]
+	ld [wUsedItemOnWhichPokemon], a
+	ld hl, wPartyMonNicks
+	call GetPartyMonName
 	ld a, SFX_HEAL_AILMENT
 	call PlaySound
 	ld hl, VitaminStatRoseText
 	call PrintText
-	jp RemoveUsedItem
-
-.vitaminNoEffect
-	pop hl
-	ld hl, VitaminNoEffectText
-	call PrintText
-	jp GBPalWhiteOut
+	ret
 
 .recalculateStats
 	ld bc, wPartyMon1Stats - wPartyMon1
@@ -1539,12 +1586,13 @@ ItemUseMedicine:
 	pop hl
 	ld a, [hl] ; a = level
 	cp b ; MAX_LEVEL on normal mode, level cap on hard mode
-	jr z, .vitaminNoEffect ; can't raise level above 100
+	jp z, .vitaminNoEffect ; can't raise level above 100
 	inc a
 	ld [hl], a ; store incremented level
 	ld [wCurEnemyLVL], a
 	push hl
 	push de
+	ld a, [wCurEnemyLVL]
 	ld d, a
 	callfar CalcExperience ; calculate experience for next level and store it at hExperience
 	pop de
@@ -1559,6 +1607,13 @@ ItemUseMedicine:
 	ldh a, [hExperience + 2]
 	ld [hl], a
 	pop hl
+	ld a, [wItemQuantity]
+	dec a
+	ld [wItemQuantity], a
+	jr z, .rareCandyFinalLevel
+	jp .useRareCandy
+
+.rareCandyFinalLevel
 	ld a, [wWhichPokemon]
 	push af
 	ld a, [wcf91]
@@ -1570,6 +1625,11 @@ ItemUseMedicine:
 	ld a, [hli]
 	ld b, a
 	ld c, [hl]
+	pop hl
+	push hl
+	ld a, [hl]
+	ld [wd0b5], a
+	call GetMonHeader
 	pop hl
 	push bc
 	push hl
@@ -1593,23 +1653,39 @@ ItemUseMedicine:
 	ld a, [hl]
 	adc b
 	ld [hl], a
+	ld a, [wQuantityPartySlot]
+	ld [wUsedItemOnWhichPokemon], a
+	ld hl, wPartyMonNicks
+	call GetPartyMonName
 	ld a, RARE_CANDY_MSG
 	ld [wPartyMenuTypeOrMessageID], a
+	ld a, [wMaxItemQuantity]
+	push af
 	call RedrawPartyMenu
+	pop af
+	ld [wMaxItemQuantity], a
+	ld c, a
+	ld a, [wQuantityPartySlot]
+	ld b, a
+	call .learnMovesFromRareCandyBatch
 	pop de
-	ld a, d
+	ld a, [wQuantityPartySlot]
 	ld [wWhichPokemon], a
-	ld a, e
-	ld [wd11e], a
+	ld [wPartyAndBillsPCSavedMenuItem], a
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
 	call LoadMonData
+	ld a, [wcf91]
+	ld [wd11e], a
+	ld a, [wQuantityPartySlot]
+	ld [wWhichPokemon], a
+	ld a, [wcf91]
+	ld [wd0b5], a
 	ld d, $01
 	callfar PrintStatsBox ; display new stats text box
 	call WaitForTextScrollButtonPress ; wait for button press
 	xor a ; PLAYER_PARTY_DATA
 	ld [wMonDataLocation], a
-	predef LearnMoveFromLevelUp ; learn level up move, if any
 
 	xor a
 	ld [wForceEvolution], a
@@ -1628,8 +1704,46 @@ ItemUseMedicine:
 	pop af
 	ld [wcf91], a
 	pop af
+	ld a, [wUsedItemOnWhichPokemon]
 	ld [wWhichPokemon], a
+	ld [wPartyAndBillsPCSavedMenuItem], a
+.rareCandysDone
+	ld a, [wQuantityBagSlot]
+	ld [wWhichPokemon], a
+	ld a, [wQuantityItemID]
+	ld [wcf91], a
+	ld a, [wMaxItemQuantity]
+	ld [wItemQuantity], a
 	jp RemoveUsedItem
+
+.learnMovesFromRareCandyBatch
+	ld a, [wCurEnemyLVL]
+	sub c
+	inc a
+	ld [wCurEnemyLVL], a
+.loop
+	push bc
+	xor a ; PLAYER_PARTY_DATA
+	ld [wMonDataLocation], a
+	ld a, b
+	ld [wWhichPokemon], a
+	ld hl, wPartyMons
+	ld bc, wPartyMon2 - wPartyMon1
+	call AddNTimes
+	ld a, [hl]
+	ld [wd11e], a
+	ld a, [wCurEnemyLVL]
+	push af
+	predef LearnMoveFromLevelUp
+	pop af
+	pop bc
+	inc a
+	ld [wCurEnemyLVL], a
+	dec c
+	jr nz, .loop
+	ld a, [wQuantityItemID]
+	ld [wcf91], a
+	ret
 
 VitaminStatRoseText:
 	text_far _VitaminStatRoseText
@@ -2581,7 +2695,11 @@ PrintItemUseTextAndRemoveItem:
 
 RemoveUsedItem:
 	ld hl, wNumBagItems
-	ld a, 1 ; one item
+	ld a, [wItemQuantity]
+	and a
+	jr nz, .haveQuantity
+	ld a, 1
+.haveQuantity
 	ld [wItemQuantity], a
 	jp RemoveItemFromInventory
 

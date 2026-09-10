@@ -1,6 +1,6 @@
 	db DEX_CHARIZARD ; pokedex id
 
-	db  78,  84,  78, 100,  95
+	db  78,  84,  78, 100, 109
 	;   hp  atk  def  spd  spc
 
 	db FIRE, FLYING ; type
@@ -14,12 +14,12 @@
 	db GROWTH_MEDIUM_SLOW ; growth rate
 
 	; tm/hm learnset
-	tmhm MEGA_PUNCH, SWORDS_DANCE, FLAMETHROWER, MEGA_KICK, TOXIC,  BODY_SLAM,   \
+	tmhm MEGA_PUNCH, SWORDS_DANCE, FLAMETHROWER, MEGA_KICK, TOXIC,  BODY_SLAM, \
 	     TAKE_DOWN,    DOUBLE_EDGE,  HYPER_BEAM,   SUBMISSION,   COUNTER,      \
-	     SEISMIC_TOSS, RAGE,         DRAGON_RAGE,  EARTHQUAKE,   FISSURE,      \
-	     DIG,          MIMIC,        DOUBLE_TEAM,  REFLECT,      BIDE,         \
-	     FIRE_BLAST,   SWIFT,        SKULL_BASH,   REST,         SUBSTITUTE,   \
-	     CUT,          FLY,          STRENGTH
+	     SEISMIC_TOSS, RAGE,         SOLARBEAM,    DRAGON_RAGE,  EARTHQUAKE,   \
+	     FISSURE,      DIG,          MIMIC,        DOUBLE_TEAM,  REFLECT,      \
+	     BIDE,         FIRE_BLAST,   SWIFT,        SKULL_BASH,   REST,         \
+	     SUBSTITUTE,   CUT,          FLY,          STRENGTH
 	; end
 
 	db 0 ; padding

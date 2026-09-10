@@ -109,7 +109,7 @@
 	const SPRITE_FLYING_PIKACHU          ; new
 DEF FIRST_STILL_SPRITE EQU const_value
 	const SPRITE_POKE_BALL               ; $47
-	const SPRITE_FOSSIL                  ; $48
+	const SPRITE_HELIX_FOSSIL            ; $48
 	const SPRITE_BOULDER                 ; $49
 	const SPRITE_PAPER                   ; $4a
 	const SPRITE_POKEDEX                 ; $4b
@@ -123,4 +123,5 @@ DEF FIRST_STILL_SPRITE EQU const_value
 	const SPRITE_JOLTEON
 	const SPRITE_FLAREON
 	const SPRITE_WIGGLYTUFF
+	const SPRITE_DOME_FOSSIL
 DEF NUM_SPRITES EQU const_value - 1

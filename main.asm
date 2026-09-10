@@ -55,7 +55,6 @@ INCLUDE "engine/pokemon/add_mon.asm"
 INCLUDE "engine/flag_action.asm"
 INCLUDE "engine/events/heal_party.asm"
 INCLUDE "engine/math/bcd.asm"
-INCLUDE "engine/movie/oak_speech/init_player_data.asm"
 INCLUDE "engine/items/get_bag_item_quantity.asm"
 INCLUDE "engine/overworld/pathfinding.asm"
 INCLUDE "engine/gfx/hp_bar.asm"
@@ -67,6 +66,9 @@ INCLUDE "engine/events/hidden_objects/town_map.asm"
 INCLUDE "engine/events/hidden_objects/pokemon_stuff.asm"
 INCLUDE "text/tmhm_names.asm"
 
+SECTION "Init Player Data", ROMX, BANK[$3A]
+
+INCLUDE "engine/movie/oak_speech/init_player_data.asm"
 
 SECTION "bank4", ROMX
 
@@ -437,4 +439,3 @@ INCLUDE "engine/gfx/animated_tiles_code.asm"
 INCLUDE "engine/movie/splash.asm"
 INCLUDE "engine/movie/hall_of_fame.asm"
 INCLUDE "engine/gfx/set_attack_animation_palette.asm"
-INCLUDE "engine/overworld/select_button_functionality.asm"

@@ -398,7 +398,7 @@ StartMenu_Item::
 	call CopyToStringBuffer
 	ld a, [wCurrentMenuItem]
 	cp a, 2
-	jr z, .tossItem
+	jp z, .tossItem
 	cp a, 1
 	jp z, .infoItem
 	ld a, [wcf91]
@@ -406,7 +406,7 @@ StartMenu_Item::
 	jr nz, .notBicycle
 	ld a, [wd732]
 	bit 5, a
-	jr z, .useItem_closeMenu
+	jp z, .useItem_closeMenu
 	ld hl, CannotGetOffHereText
 	call PrintText
 	jp ItemMenuLoop

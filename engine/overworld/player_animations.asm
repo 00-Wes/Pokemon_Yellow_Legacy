@@ -57,13 +57,13 @@ EnterMapAnim::
 	ld hl, wFlyAnimUsingCoordList
 	xor a ; is using coord list
 	ld [hli], a ; wFlyAnimUsingCoordList
-	ld a, 5
+	ld a, 9
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $8 ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld de, FlyAnimationEnterScreenCoords_Pikachu1
 	call DoFlyAnimation
 	ld hl, wFlyAnimCounter
-	ld a, 5
+	ld a, 9
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing left)
 	ld de, FlyAnimationEnterScreenCoords_Pikachu2
@@ -114,27 +114,35 @@ FlyAnimationEnterScreenCoords:
 FlyAnimationEnterScreenCoords_Pikachu1: ; new
 ; y, x pairs
 ;	db $00, $40 ; starting point
+	db $03, $41
 	db $06, $42
+	db $09, $43
 	db $0C, $44
-	db $11, $46
-	db $16, $47
-	db $1B, $48
+	db $0F, $45
+	db $12, $46
+	db $15, $47
+	db $18, $48
+	db $1B, $49
 
 FlyAnimationEnterScreenCoords_Pikachu2: ; new
 ; y, x pairs
-	db $20, $45
-	db $24, $42
-	db $28, $40
-	db $2C, $3E
-	db $2F, $3C
+	db $20, $47
+	db $22, $45
+	db $24, $43
+	db $26, $41
+	db $28, $3F
+	db $2A, $3D
+	db $2C, $3B
+	db $2E, $39
+	db $30, $37
 
 FlyAnimationEnterScreenCoords_Pikachu3: ; new
 ; y, x pairs
-	db $32, $3D
-	db $35, $3E
-	db $38, $3F
-	db $3A, $3F
-	db $3C, $40
+	db $32, $37
+	db $34, $38
+	db $36, $3A
+	db $38, $3C
+	db $3A, $3E
 ;	db $3C, $40 ; landing point
 
 
@@ -217,21 +225,21 @@ _LeaveMapAnim::
 	ld hl, wFlyAnimUsingCoordList
 	xor a ; is using coord list
 	ld [hli], a ; wFlyAnimUsingCoordList
-	ld a, 8
+	ld a, 25
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld de, FlyAnimationScreenCoords_Pikachu1
 	call DoFlyAnimation
 
 	ld hl, wFlyAnimCounter
-	ld a, 14
+	ld a, 40
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $8 ; wFlyAnimBirdSpriteImageIndex (facing left)
 	ld de, FlyAnimationScreenCoords_Pikachu2
 	call DoFlyAnimation
 
 	ld hl, wFlyAnimCounter
-	ld a, 9
+	ld a, 16
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld de, FlyAnimationScreenCoords_Pikachu3
@@ -307,43 +315,93 @@ FlyAnimationScreenCoords2:
 FlyAnimationScreenCoords_Pikachu1: ; new
 ; y, x pairs
 ;	db $3C, $40 ; starting point
-	db $3C, $46
-	db $38, $4A
-	db $34, $4E
-	db $30, $50
-	db $2E, $52
-	db $2C, $54
-	db $2A, $56
-	db $28, $58
+	db $3C, $41
+	db $3A, $42
+	db $38, $44
+	db $37, $46
+	db $36, $48
+	db $35, $4A
+	db $34, $4C
+	db $33, $4E
+	db $32, $50
+	db $31, $52
+	db $30, $54
+	db $2F, $56
+	db $2E, $58
+	db $2D, $5A
+	db $2C, $5C
+	db $2B, $5E
+	db $2A, $60
+	db $29, $62
+	db $28, $64
+	db $27, $66
+	db $26, $68
+	db $25, $6A
+	db $24, $6C
+	db $23, $6E
+	db $22, $70
 
 FlyAnimationScreenCoords_Pikachu2: ; new
 ; y, x pairs
-;	db $28, $58 ; starting point
-	db $27, $56
-	db $26, $54
-	db $25, $52
-	db $24, $50
-	db $23, $4C
-	db $22, $48
-	db $20, $44
-	db $1E, $40
-	db $1D, $3C
-	db $1C, $38
-	db $1B, $36
-	db $1A, $34
-	db $19, $32
-	db $18, $30
+;	db $22, $70 ; starting point
+	db $22, $6E
+	db $23, $6C
+	db $24, $6A
+	db $25, $68
+	db $26, $66
+	db $27, $64
+	db $28, $62
+	db $29, $60
+	db $2A, $5E
+	db $29, $5C
+	db $28, $5A
+	db $27, $58
+	db $26, $56
+	db $25, $54
+	db $24, $52
+	db $23, $50
+	db $22, $4E
+	db $21, $4C
+	db $20, $4A
+	db $1F, $48
+	db $1E, $46
+	db $1D, $44
+	db $1C, $42
+	db $1B, $40
+	db $1A, $3E
+	db $19, $3C
+	db $18, $3A
+	db $17, $38
+	db $16, $36
+	db $15, $34
+	db $14, $32
+	db $13, $30
+	db $12, $2E
+	db $11, $2C
+	db $10, $2A
+	db $0F, $28
+	db $0E, $26
+	db $0D, $24
+	db $0C, $22
+	db $0B, $21
 
 FlyAnimationScreenCoords_Pikachu3: ; new
 ; y, x pairs
-;	db $18, $30 ; starting point
-	db $17, $32
+;	db $0B, $21 ; starting point
+	db $0B, $22
+	db $16, $33
 	db $15, $34
-	db $12, $36
-	db $0F, $38
-	db $0C, $3A
-	db $08, $3C
-	db $04, $3E
+	db $13, $35
+	db $11, $36
+	db $0F, $37
+	db $0D, $38
+	db $0B, $39
+	db $09, $3A
+	db $07, $3B
+	db $06, $3C
+	db $04, $3D
+	db $02, $3E
+	db $01, $3F
 	db $00, $40
 
 	db $F0, $00 ; ? what's this for?

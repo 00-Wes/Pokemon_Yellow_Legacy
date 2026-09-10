@@ -765,8 +765,8 @@ wFilteredBagItemsCount:: db
 ; 0 if the joypad state is not being simulated
 wSimulatedJoypadStatesIndex:: db
 
-; written to but nothing ever reads it
-wUnusedCD39:: db
+; temporary item ID for quantity item use
+wQuantityItemID:: db
 
 ; written to but nothing ever reads it
 wUnusedCD3A:: db
@@ -979,7 +979,7 @@ wTempFlag:: db
 wTempObtainedBadgesBooleans:: ds NUM_BADGES
 
 NEXTU
-wUnusedCD3D:: db
+wQuantityBagSlot:: db
 ; the number of credits mons that have been displayed so far
 wNumCreditsMonsDisplayed:: db
 
@@ -2563,7 +2563,7 @@ wDVCalcVar2::
 ; the trainer the player must face after getting a wrong answer in the Cinnabar
 ; gym quiz
 wOpponentAfterWrongAnswer::
-wUnusedDA38:: db
+wQuantityPartySlot:: db
 
 ; index of current map script, mostly used as index for function pointer array
 ; mostly copied from map-specific map script pointer and written back later

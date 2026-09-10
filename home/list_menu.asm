@@ -31,13 +31,13 @@ DisplayListMenuID::
 	call DisplayTextBoxID ; draw the menu text box
 	call UpdateSprites ; disable sprites behind the text box
 ; the code up to .skipMovingSprites appears to be useless
-	hlcoord 4, 2 ; coordinates of upper left corner of menu text box
-	lb de, 9, 14 ; height and width of menu text box
-	ld a, [wListMenuID]
-	and a ; PCPOKEMONLISTMENU?
-	jr nz, .skipMovingSprites
-	call UpdateSprites
-.skipMovingSprites
+;	hlcoord 4, 2 ; coordinates of upper left corner of menu text box
+;	lb de, 9, 14 ; height and width of menu text box
+;	ld a, [wListMenuID]
+;	and a ; PCPOKEMONLISTMENU?
+;	jr nz, .skipMovingSprites
+;	call UpdateSprites
+;.skipMovingSprites
 	ld a, 1 ; max menu item ID is 1 if the list has less than 2 entries
 	ld [wMenuWatchMovingOutOfBounds], a
 	ld a, [wListCount]
@@ -244,14 +244,15 @@ DisplayChooseQuantityMenu::
 	call PlaceString
 	xor a
 	ld [wItemQuantity], a ; initialize current quantity to 0
-	jp .incrementQuantity
+	jr .incrementQuantity
 .waitForKeyPressLoop
 	call JoypadLowSensitivity
 	ldh a, [hJoyPressed] ; newly pressed buttons
 	bit BIT_A_BUTTON, a
-	jp nz, .buttonAPressed
+	jr nz, .buttonAPressed
 	bit BIT_B_BUTTON, a
-	jp nz, .buttonBPressed
+	jr nz, .buttonBPressed
+	ldh a, [hJoy5] ; throttled held directional buttons
 	bit BIT_D_UP, a
 	jr nz, .incrementQuantity
 	bit BIT_D_DOWN, a
@@ -261,18 +262,30 @@ DisplayChooseQuantityMenu::
 	bit BIT_D_LEFT, a
 	jr nz, .decrementQuantityLarge
 	jr .waitForKeyPressLoop
+.buttonAPressed ; the player chose to make the transaction
+	xor a
+	ld [wMenuItemToSwap], a ; 0 means no item is currently being swapped
+	ret
+.buttonBPressed ; the player chose to cancel the transaction
+	xor a
+	ld [wMenuItemToSwap], a ; 0 means no item is currently being swapped
+	ld a, $ff
+	ret
 .incrementQuantityLarge
-	ld a, [wMaxItemQuantity]
+	ld hl, wItemQuantity
+	ld a, [hl]
+	add a, 10
+	jr c, .maxQuantity
 	ld b, a
-	ld a, [wItemQuantity]
-    add a, 10
-    cp b
-    jr nc, .maxQuantity ; if number goes grater than max, set it to max
-    ld [wItemQuantity], a 
-    jr .handleNewQuantity
+	ld a, [wMaxItemQuantity]
+	cp b
+	jr c, .maxQuantity
+	ld a, b
+	ld [hl], a
+	jr .handleNewQuantity
 .maxQuantity
-    ld a, b
-    ld [wItemQuantity], a
+	ld a, [wMaxItemQuantity]
+	ld [hl], a
 	jr .handleNewQuantity
 .incrementQuantity
 	ld a, [wMaxItemQuantity]
@@ -290,12 +303,15 @@ DisplayChooseQuantityMenu::
 .decrementQuantityLarge
 	ld hl, wItemQuantity
 	ld a, [hl]
+	cp 11
+	jr c, .setTo1
 	sub 10
-	jr z, .setTo1 ; if quantity is 0, set to 1
-	jr nc, .storeNewQuantity ; if quantity goes below 1, set to 1
+	ld [hl], a
+	jr .handleNewQuantity
 .setTo1
 	ld a, 1
-	jr .storeNewQuantity
+	ld [hl], a
+	jr .handleNewQuantity
 .decrementQuantity
 	ld hl, wItemQuantity ; current quantity
 	dec [hl]
@@ -356,15 +372,6 @@ DisplayChooseQuantityMenu::
 	lb bc, LEADING_ZEROES | 1, 2 ; 1 byte, 2 digits
 	call PrintNumber
 	jp .waitForKeyPressLoop
-.buttonAPressed ; the player chose to make the transaction
-	xor a
-	ld [wMenuItemToSwap], a ; 0 means no item is currently being swapped
-	ret
-.buttonBPressed ; the player chose to cancel the transaction
-	xor a
-	ld [wMenuItemToSwap], a ; 0 means no item is currently being swapped
-	ld a, $ff
-	ret
 
 InitialQuantityText::
 	db "×01@"

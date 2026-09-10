@@ -47,7 +47,7 @@ Moves:
 	move BODY_SLAM,    PARALYZE_SIDE_EFFECT2,       85, NORMAL,       100, 15
 	move WRAP,         TRAPPING_EFFECT,             15, NORMAL,        85, 20
 	move TAKE_DOWN,    RECOIL_EFFECT,               95, NORMAL,       100, 20
-	move THRASH,       THRASH_PETAL_DANCE_EFFECT,   90, NORMAL,       100, 20
+	move THRASH,       THRASH_PETAL_DANCE_EFFECT,  120, NORMAL,       100, 20
 	move DOUBLE_EDGE,  RECOIL_EFFECT,              120, NORMAL,       100, 15
 	move TAIL_WHIP,    DEFENSE_DOWN1_EFFECT,         0, BIRD,         100, 30
 	move POISON_STING, POISON_SIDE_EFFECT1,         35, POISON,       100, 35
@@ -90,7 +90,7 @@ Moves:
 	move POISONPOWDER, POISON_EFFECT,                0, POISON,        90, 35
 	move STUN_SPORE,   PARALYZE_EFFECT,              0, GRASS,         75, 30
 	move SLEEP_POWDER, SLEEP_EFFECT,                 0, GRASS,         75, 15
-	move PETAL_DANCE,  THRASH_PETAL_DANCE_EFFECT,   90, GRASS,        100, 20
+	move PETAL_DANCE,  THRASH_PETAL_DANCE_EFFECT,  120, GRASS,        100, 20
 	move STRING_SHOT,  SPEED_DOWN1_EFFECT,           0, BUG,           95, 40
 	move DRAGON_RAGE,  SPECIAL_DAMAGE_EFFECT,        1, DRAGON,       100, 20
 	move FIRE_SPIN,    TRAPPING_EFFECT,             15, FIRE,          85, 15
@@ -167,7 +167,7 @@ Moves:
 	move FURY_SWIPES,  TWO_TO_FIVE_ATTACKS_EFFECT,  20, NORMAL,       100, 20
 	move BONEMERANG,   ATTACK_TWICE_EFFECT,         50, GROUND,        90, 20
 	move REST,         HEAL_EFFECT,                  0, BIRD,         100, 10
-	move ROCK_SLIDE,   FLINCH_SIDE_EFFECT1,         75, ROCK,          95, 15
+	move ROCK_SLIDE,   FLINCH_SIDE_EFFECT1,         90, ROCK,          95, 15
 	move HYPER_FANG,   FLINCH_SIDE_EFFECT1,         80, NORMAL,        90, 15
 	move SHARPEN,      ATTACK_UP1_EFFECT,            0, BIRD,         100, 30
 	move CONVERSION,   CONVERSION_EFFECT,            0, BIRD,         100, 30

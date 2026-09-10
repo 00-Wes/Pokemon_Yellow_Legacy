@@ -9,12 +9,6 @@ DEF TRUE  EQU 1
 	const FLAG_TEST  ; 2
 ;;;;;;;;;;
 
-	const_def
-	const WALKING ; 0
-	const BIKING  ; 1
-	const SURFING ; 2
-;;;;;;;;;;
-
 ;;;;;;;;;; PureRGBnote: ADDED: pokedex flags
 
 	const_def
