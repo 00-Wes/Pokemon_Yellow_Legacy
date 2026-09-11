@@ -80,6 +80,12 @@ OverworldLoopLessDelay::
 	ldh [hSpriteIndexOrTextID], a
 	jp .displayDialogue
 .startButtonNotPressed
+	bit BIT_SELECT, a
+	jr z, .selectButtonNotPressed
+; if SELECT is pressed, toggle the bicycle (only reachable outside of battle/menus)
+	farcall UseSelectBicycle
+	jp OverworldLoop
+.selectButtonNotPressed
 	bit BIT_A_BUTTON, a
 	jp z, .checkIfDownButtonIsPressed
 ; if A is pressed

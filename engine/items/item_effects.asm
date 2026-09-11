@@ -653,7 +653,52 @@ ItemUseTownMap:
 	jp nz, ItemUseNotTime
 	farjp DisplayTownMap
 
-ItemUseBicycle:
+; toggles the bicycle when SELECT is pressed on the overworld (not from the bag menu)
+UseSelectBicycle::
+	ld b, BICYCLE
+	call IsItemInBag
+	ret z ; don't allow toggling without owning the bicycle
+	ld a, [wWalkBikeSurfState]
+	cp 2 ; surfing? bike can't be used
+	jr z, .toggleWillFail
+	and a
+	jr z, .tryToGetOn
+; already biking - forced-bike maps (e.g. Cycling Road) don't allow getting off
+	ld a, [wd732]
+	bit 5, a
+	jr nz, .cannotGetOff
+	jr .toggleSilently
+.tryToGetOn
+	call IsBikeRidingAllowed
+	jr nc, .toggleWillFail
+.toggleSilently
+	call ItemUseBicycle
+	call LoadPlayerSpriteGraphics
+	jp UpdateSprites
+
+.cannotGetOff
+	call EnableAutoTextBoxDrawing
+	ld a, 1 ; not 0
+	ld [hSpriteIndexOrTextID], a
+	farcall DisplayTextIDInit ; load font/text box tiles to show the failure message
+	ld hl, CannotGetOffBikeHereText
+	call PrintText
+	jr .closeTextBoxAndReturn
+
+.toggleWillFail
+; only draw a text box for the failure message; a successful toggle stays silent
+	call EnableAutoTextBoxDrawing
+	ld a, 1 ; not 0
+	ld [hSpriteIndexOrTextID], a
+	farcall DisplayTextIDInit ; load font/text box tiles to show the failure message
+	call ItemUseBicycle
+
+.closeTextBoxAndReturn
+	ldh a, [hLoadedROMBank]
+	push af
+	jp CloseTextDisplay ; restore sprite graphics and map view
+
+ItemUseBicycle::
 	ld a, [wIsInBattle]
 	and a
 	jp nz, ItemUseNotTime
@@ -670,8 +715,7 @@ ItemUseBicycle:
 	ld a, $00
 	ld [wPikachuSpawnState], a
 	call PlayDefaultMusic ; play walking music
-	ld hl, GotOffBicycleText
-	jp PrintText
+	ret
 
 .tryToGetOnBike
 	call IsBikeRidingAllowed
@@ -682,12 +726,6 @@ ItemUseBicycle:
 	ld a, $1
 	ld [wWalkBikeSurfState], a ; change player state to bicycling
 	call PlayDefaultMusic ; play bike riding music
-	xor a
-	ld [wWalkBikeSurfState], a
-	ld hl, GotOnBicycleText
-	call PrintText
-	ld a, $1
-	ld [wWalkBikeSurfState], a
 	ret
 
 ; used for Surf out-of-battle effect
@@ -2792,16 +2830,8 @@ ItemUseText00:
 	text_far _ItemUseText002
 	text_end
 
-GotOnBicycleText:
-	text_far _GotOnBicycleText1
-	text_low
-	text_far _GotOnBicycleText2
-	text_end
-
-GotOffBicycleText:
-	text_far _GotOffBicycleText1
-	text_low
-	text_far _GotOffBicycleText2
+CannotGetOffBikeHereText:
+	text_far _CannotGetOffHereText
 	text_end
 
 ; restores bonus PP (from PP Ups) when healing at a pokemon center

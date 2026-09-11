@@ -64,7 +64,7 @@ Cut2::
 	jp RedrawMapView
 .common
 	ld a, SFX_CUT
-	rst _PlaySound
+	call PlaySound
 	farcall AnimCut
 	ld a, $1
 	ld [wUpdateSpritesEnabled], a
